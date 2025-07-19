@@ -84,6 +84,56 @@ sequenceDiagram
 electron 核心模块没有捆绑任何打包内容。
 依赖于 `electron forge` 来完成打包。
 
+安装依赖 + 启动配置命令
+```
+npm install --save-dev @electron-forge/cli
+npx electron-forge import
+```
+执行 make
+* 1.将应用与 electron 二进制包结合。完成打包的代码，会被生成到一个特定的文件夹内。
+* 2.使用这个文件夹，为每个 maker，配置一个可分发文件
+
+```shell
+npm run make
+
+> blackMyth@1.0.0 make
+> electron-forge make
+
+✔ Checking your system
+✔ Loading configuration
+✔ Resolving make targets
+  › Making for the following targets:
+✔ Running package command
+  ✔ Preparing to package application
+  ✔ Running packaging hooks
+    ✔ Running generateAssets hook
+    ✔ Running prePackage hook
+  ✔ Packaging application
+    ✔ Packaging for arm64 on darwin [2s]
+  ✔ Running postPackage hook
+✔ Running preMake hook
+✔ Making distributables
+  ✔ Making a zip distributable for darwin/arm64 [7s]
+✔ Running postMake hook
+  › Artifacts available at: /Users/chp/code/blackMyth/out/make
+
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake.
+(node:62436) [DEP0174] DeprecationWarning: Calling promisify on a function that returns a Promise is likely a mistake
+```
+
+打包成功后，`out/make` 里面的文件就可以启动了。
 
 # Problem
 
