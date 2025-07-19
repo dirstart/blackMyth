@@ -78,3 +78,42 @@ sequenceDiagram
     Main-->>Main: dialog.showOpenDialog()
     Main-->>Renderer: ipcRenderer.send('file-selected', path)
 ```
+
+# 打包应用
+
+electron 核心模块没有捆绑任何打包内容。
+依赖于 `electron forge` 来完成打包。
+
+
+# Problem
+
+## 1.什么是预加载脚本
+Electron 的主进程，拥有完全【操作系统】访问的权限。
+出于安全原因，渲染进程跑在网页上，而非是 Node 里。
+为了将不同类型的进程桥接在一起，我们需要使用 预加载的 特殊脚本。
+
+所以，预加载脚本，是一个桥梁？？？
+
+
+## 2.electron是如何发布的(如何打包应用)
+
+
+## 3.electron如何结合 vue3 进行开发
+打包过程示意图
+
+【开发环境】
+1.启用 vite 开发服务器
+2.加载 vue3 插件，处理 `.vue` 文件
+3.利用 ES 模块，直给浏览器
+4.支持热模块替换，提高开发效率
+
+【生产环境】
+1.使用 Rollup 打包
+2.优化代码（tree-shaking、压缩）
+3.生成静态资源
+
+### 结合 Electron 特殊的地方。
+1.主进程直接运行 Node，不经过 Vite 处理
+2.渲染进程经过 Vue3 编译后，通过 mainWindow.loadURL 加载到 Electron 窗口
+3.生产环境，Vite 打包结果通过 mainWindow.loadFile()加载。
+

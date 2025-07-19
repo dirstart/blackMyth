@@ -37,3 +37,13 @@ pnpm 默认禁止包执行。
 ```
 pnpm approve-builds
 ```
+
+
+## electron 打包错误
+An unhandled error has occurred inside Forge:
+Failed to install modules: ["electron-compile","electron-squirrel-startup"]
+
+With output: Exited with status 1
+Error: Failed to install modules: ["electron-compile","electron-squirrel-startup"]
+
+> 还是不用  pnpm 了，使用  npm 吧。

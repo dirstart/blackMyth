@@ -15,7 +15,7 @@ function createWindow() {
       nodeIntegration: true,
       // 启用上下文隔离（Electron 12+ 默认启用）
       contextIsolation: false,
-      // 预加载脚本路径
+      // 预加载脚本路径：预加载脚本作为桥梁，将主进程和渲染进程连接起来
       preload: path.join(__dirname, 'preload.js')
     }
   });
