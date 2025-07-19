@@ -1,19 +1,22 @@
 {
-  "name": "blackMyth",
+  "name": "blackmyth",
+  "productName": "blackmyth",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "My Electron application description",
+  "main": ".vite/build/main.js",
   "scripts": {
-    "dev": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.4",
+  "author": {
+    "name": "dirstart",
+    "email": "835041058@qq.com"
+  },
+  "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",
     "@electron-forge/maker-deb": "^7.8.1",
@@ -22,8 +25,10 @@
     "@electron-forge/maker-zip": "^7.8.1",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
     "@electron-forge/plugin-fuses": "^7.8.1",
+    "@electron-forge/plugin-vite": "^7.8.1",
     "@electron/fuses": "^1.8.0",
-    "electron": "37.2.3"
+    "electron": "37.2.3",
+    "vite": "^5.4.19"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1"
