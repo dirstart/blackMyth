@@ -9,7 +9,10 @@
 		"package": "electron-forge package",
 		"make": "electron-forge make",
 		"publish": "electron-forge publish",
-		"lint": "echo \"No linting configured\""
+		"lint": "echo \"No linting configured\"",
+		"test:render": "vite --config ./vite.renderer.config.mjs --port 5173 --open",
+		"test:render:build": "vite build --config ./vite.renderer.config.mjs",
+		"test:main": "vite --config ./vite.main.config.mjs --port 5174 --debug"
 	},
 	"keywords": [],
 	"author": {
@@ -27,11 +30,13 @@
 		"@electron-forge/plugin-fuses": "^7.8.1",
 		"@electron-forge/plugin-vite": "^7.8.1",
 		"@electron/fuses": "^1.8.0",
+		"@vitejs/plugin-vue": "^6.0.0",
 		"electron": "37.2.3",
 		"lefthook": "^1.12.2",
 		"vite": "^5.4.19"
 	},
 	"dependencies": {
-		"electron-squirrel-startup": "^1.0.1"
+		"electron-squirrel-startup": "^1.0.1",
+		"vue": "^3.5.17"
 	}
 }
