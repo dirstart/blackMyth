@@ -1,5 +1,5 @@
 import path from "node:path";
-import { app, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow } from "electron";
 import started from "electron-squirrel-startup";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -12,8 +12,11 @@ const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
+    frame: false, // 完全隐藏原生标题栏
+    transparent: true, // 标题栏允许透明
+    vibrancy: 'under-window', // macOS 毛玻璃效果（可选）
     titleBarStyle: 'default', // 保留系统默认标题栏（Windows/macOS）
-    transparent: true,       // 允许标题栏透明（可选）
+    backgroundColor: '#000', // 设置窗口背景色与标题栏一致
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 		},
@@ -54,5 +57,31 @@ app.on("window-all-closed", () => {
 	}
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+
+// 窗口控制
+// ipcMain.on('window-minimize', (e) => BrowserWindow.fromWebContents(e.sender).minimize());
+// ipcMain.on('window-maximize', (e) => BrowserWindow.fromWebContents(e.sender).maximize());
+// ipcMain.on('window-unmaximize', (e) => BrowserWindow.fromWebContents(e.sender).unmaximize());
+// ipcMain.on('window-close', (e) => BrowserWindow.fromWebContents(e.sender).close());
+
+// // 状态查询
+// ipcMain.handle('window-is-maximized', (e) =>
+//   BrowserWindow.fromWebContents(e.sender).isMaximized()
+// );
+
+// // 状态变化通知
+// const setupWindowStateListeners = (win) => {
+//   win.on('maximize', () =>
+//     win.webContents.send('window-maximize-change', true)
+//   );
+//   win.on('unmaximize', () =>
+//     win.webContents.send('window-maximize-change', false)
+//   );
+// };
+
+// // 鼠标事件穿透
+// ipcMain.on('set-ignore-mouse-events', (e, ignore) => {
+//   const win = BrowserWindow.fromWebContents(e.sender);
+//   win.setIgnoreMouseEvents(ignore, { forward: true });
+// });
+
