@@ -32,7 +32,6 @@ const items = [
 <style scoped lang="less">
 .left-list-container {
   width: 250px;
-  background-color: #1c1c1c;
   color: white;
   padding: 20px;
   border-radius: 8px;

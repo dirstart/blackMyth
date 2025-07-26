@@ -1,48 +1,32 @@
 <template>
   <div class="app h-screen flex-col overflow-hidden relative">
-    <MacTitleBar />
-    <InkBg class="h-screen" />
+    <MacTitleBar class="z-9999 basis-32" />
 
     <!-- app 主内容 -->
-    <div class="main relative z-10 h-full flex-col">
-      <LeftList />
+    <div class="main relative z-10 flex-1 flex-row">
+      <LeftList class="basis-250" />
 
       <!-- 音乐内容 -->
-      <div class="content flex-1 flex-row overflow-hidden">
-        <!-- 音乐列表 -->
-        <div class="playlist mb32">
-          <div
-            class="text-10"
-            style="color:#089e8a"
-          >
-            列表
-          </div>
-          <div class="text-bold mb18">
-            列表
-          </div>
-          <div class="">
-            test
-          </div>
+      <div class="content flex-1 flex-col">
+        <!-- 专辑/封面 -->
+        <div class="player-content flex-1">
+          <div>专辑</div>
+        </div>
+        <!-- 音乐播放器 -->
+        <div class="player basis-150">
+          <div>播放标题</div>
+          <div>播放进度</div>
         </div>
 
-        <!-- 音乐容器 -->
-        <div class="player flex-col">
-          <div class="player-content flex-1">
-            <div>专辑</div>
-          </div>
-
-          <!-- 用户控制栏 -->
-          <div class="text-32 ctrl">
-            音乐播放控制栏
-          </div>
-        </div>
-
-        <div class="shortcuts">
+        <div class="shortcuts basis-100">
           快件按钮组件
           <ShortCut />
         </div>
       </div>
     </div>
+
+    <!-- 背景 -->
+    <InkBg class="h-screen z--1" />
   </div>
 </template>
 
@@ -53,5 +37,9 @@ import LeftList from '@/components/LeftList.vue';
 import ShortCut from '@/components/ShortCut.vue';
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+.content {
+  background-color: #089e8a;
+}
+</style>
 

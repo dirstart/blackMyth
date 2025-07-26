@@ -19,6 +19,17 @@
   flex: 1;
 }
 
+// 添加basis工具类
+@basis-values: 100, 150, 200, 250;
+
+each(@basis-values, {
+  .basis-@{value} {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: @value * 1px;
+  }
+});
+
 .flex-wrap {
   flex-wrap: wrap;
 }
@@ -94,7 +105,7 @@ each(@font-sizes, {
 }
 
 /* z-index工具类 - 使用Less函数实现 */
-@z-index-values: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 1000, 9999;
+@z-index-values: -1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 1000, 9999;
 
 // 生成z-index类 (z-10, z-20, etc.)
 .generate-z-index-classes() {

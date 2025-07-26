@@ -47,7 +47,7 @@ const {
 .mac-title-bar {
   /* 允许拖动 */
   -webkit-app-region: drag;
-  height: 28px;
+    height: 32px;
   display: flex;
   align-items: center;
   padding: 0 12px;

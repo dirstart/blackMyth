@@ -10,8 +10,10 @@ if (started) {
 const createWindow = () => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
+    width: 1200,       // 初始宽度
+    height: 800,       // 初始高度
+    minWidth: 1057,    // 最小宽度
+    minHeight: 752,    // 最小高度
     frame: false, // 完全隐藏原生标题栏
     transparent: true, // 标题栏允许透明
     alwaysOnTop: false, // 避免强制置顶
