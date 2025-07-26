@@ -39,6 +39,7 @@
 
         <div class="shortcuts">
           快件按钮组件
+          <ShortCut />
         </div>
       </div>
     </div>
@@ -49,6 +50,7 @@
 import InkBg from '@/components/InkBg.vue';
 import MacTitleBar from '@/components/MacTitleBar.vue';
 import LeftList from '@/components/LeftList.vue';
+import ShortCut from '@/components/ShortCut.vue';
 </script>
 
 <style lang="less"></style>
