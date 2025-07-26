@@ -2,18 +2,10 @@
   <div class="app h-screen flex-col overflow-hidden relative">
     <MacTitleBar />
     <InkBg class="h-screen" />
-    <!-- 可能的背景元素 -->
-    <!-- <div class="bg absolute inset-0" /> -->
 
     <!-- app 主内容 -->
     <div class="main relative z-10 h-full flex-col">
-      <!-- 标题栏 -->
-      <div class="text-12 text-lighter mr16">
-        标题
-      </div>
-      <div class="text-32 text-danger">
-        副标题
-      </div>
+      <LeftList />
 
       <!-- 音乐内容 -->
       <div class="content flex-1 flex-row overflow-hidden">
@@ -56,6 +48,7 @@
 <script setup>
 import InkBg from '@/components/InkBg.vue';
 import MacTitleBar from '@/components/MacTitleBar.vue';
+import LeftList from '@/components/LeftList.vue';
 </script>
 
 <style lang="less"></style>
