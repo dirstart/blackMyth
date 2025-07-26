@@ -65,3 +65,15 @@ https://github.com/electron/forge/issues/3198
 
 @Sandeep-android-2000 bdw, u can just use https://electron-vite.org/guide/#scaffolding-your-first-electron-vite-project instead to not worry about all this. it supports releases too i think - https://electron-vite.org/guide/distribution
 BDW，您可以改用 https://electron-vite.org/guide/#scaffolding-your-first-electron-vite-project 而不必担心这一切。我认为它也支持发布 - https://electron-vite.org/guide/distribution
+
+
+biome并不完全支持 Vue3：难受，https://github.com/biomejs/biome/discussions/4764
+【不要使用 biome 去支持 vue3 了】
+
+1.关于 Electron 的标题栏。如果不进行隐藏，则有很多系统默认样式。
+【自定义 Electron 标题栏】，会出现一个  聚焦、失去焦点的问题。
+【鼠标事件穿透】 问题。【创建无边框应用】。
+
+
+
+## Alt + Tab 无法唤醒 Electron 项目

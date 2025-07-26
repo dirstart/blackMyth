@@ -2,27 +2,24 @@
   <div
     v-if="isElectron"
     class="mac-title-bar"
-    :class="{ 'is-maximized': isMaximized }"
+    :class="{
+      'is-maximized': isMaximized,
+      'is-blur': !isWindowFocused
+    }"
   >
     <!-- 左侧控制按钮 -->
     <div class="window-controls">
       <button
         class="close"
         @click="close"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
       <button
         class="minimize"
         @click="minimize"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
       <button
         class="maximize"
         @click="toggleMaximize"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
     </div>
 
@@ -39,23 +36,16 @@ import { useElectron } from '../composables/useElectron';
 const {
   isElectron,
   isMaximized,
+  isWindowFocused,
   minimize,
   toggleMaximize,
   close
 } = useElectron();
-
-debugger
-console.log('🍀🍀🍀🍀', 'isElectron', isElectron);
-
-// 按钮悬停效果控制
-const setButtonHover = (isHovering) => {
-  if (!isElectron.value) return;
-  window.electronAPI?.setIgnoreMouseEvents(!isHovering);
-};
 </script>
 
 <style scoped>
 .mac-title-bar {
+  /* 允许拖动 */
   -webkit-app-region: drag;
   height: 28px;
   display: flex;
@@ -78,6 +68,7 @@ const setButtonHover = (isHovering) => {
 }
 
 .window-controls {
+  /* 按钮 */
   -webkit-app-region: no-drag;
   display: flex;
   gap: 8px;
@@ -127,5 +118,13 @@ const setButtonHover = (isHovering) => {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background: transparent;
+}
+/* 新增失焦样式 */
+.mac-title-bar.is-blur {
+  opacity: 0.8;
+}
+
+.mac-title-bar.is-blur .window-controls button {
+  filter: grayscale(50%);
 }
 </style>
