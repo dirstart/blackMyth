@@ -53,7 +53,8 @@
 </template>
 
 <script setup>
-import MacTitleBar from './components/MacTitleBar.vue';
+import InkBg from '@/components/InkBg.vue';
+import MacTitleBar from '@/components/MacTitleBar.vue';
 </script>
 
 <style lang="less"></style>

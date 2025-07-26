@@ -24,9 +24,9 @@
     </div>
 
     <!-- 居中标题 -->
-    <div class="title">
+    <!-- <div class="title">
       <slot>Electron App</slot>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -100,19 +100,6 @@ const {
   background-color: #27c93f;
   border: 0.5px solid #1aab29;
 }
-
-.title {
-  flex: 1;
-  text-align: center;
-  font-size: 13px;
-  color: #333;
-  opacity: 0.9;
-}
-
-.dark .title {
-  color: #f0f0f0;
-}
-
 /* 最大化时移除圆角 */
 .mac-title-bar.is-maximized {
   border-top-left-radius: 0;

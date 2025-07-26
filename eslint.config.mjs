@@ -3,6 +3,7 @@ import globals from "globals";
 import pluginVue from "eslint-plugin-vue";
 import css from "@eslint/css";
 import importPlugin from "eslint-plugin-import";
+import alias from 'eslint-import-resolver-alias';
 
 export default [
   // JavaScript/ESM files configuration
@@ -35,6 +36,14 @@ export default [
     languageOptions: {
       ...config.languageOptions,
       globals: { ...globals.browser }
+    },
+    settings: {
+      'import/resolver': {
+        alias: {
+          map: [['@', './src']],
+          extensions: ['.js', '.vue', '.json']
+        }
+      }
     }
   })),
   // CSS files configuration
