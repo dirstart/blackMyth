@@ -77,3 +77,5 @@ biome并不完全支持 Vue3：难受，https://github.com/biomejs/biome/discuss
 
 
 ## Alt + Tab 无法唤醒 Electron 项目
+> 发现打包之后，就没有这个问题了。
+> 仅开发环境存在，先忽略。

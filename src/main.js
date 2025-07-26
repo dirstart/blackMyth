@@ -45,7 +45,11 @@ app.whenReady().then(() => {
 	app.on("activate", () => {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			createWindow();
-		}
+    } else {
+      const win = BrowserWindow.getAllWindows()[0];
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
 	});
 });
 
@@ -75,7 +79,7 @@ ipcMain.on('window-close', (e) =>
   BrowserWindow.fromWebContents(e.sender).close()
 );
 
-// 【双向通信】接收，并且返回结果
+// 【双向通信】接收，并且返回结果s
 ipcMain.handle('window-is-maximized', (e) =>
   BrowserWindow.fromWebContents(e.sender).isMaximized()
 );
@@ -88,8 +92,8 @@ function setupWindowListeners(win) {
   win.on('maximize', () => {
     console.log('🍀🍀🍀🍀', 'maximize');
     return win.webContents.send('window-maximize-change', true)
-  }
-  );
+  });
+
   win.on('unmaximize', () => {
     console.log('🍀🍀🍀🍀', 'unmaximize')
     return win.webContents.send('window-maximize-change', false)
