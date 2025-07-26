@@ -31,6 +31,7 @@ const createWindow = () => {
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
+  setupWindowListeners(mainWindow);
 };
 
 // This method will be called when Electron has finished
@@ -59,29 +60,35 @@ app.on("window-all-closed", () => {
 
 
 // 窗口控制
-// ipcMain.on('window-minimize', (e) => BrowserWindow.fromWebContents(e.sender).minimize());
-// ipcMain.on('window-maximize', (e) => BrowserWindow.fromWebContents(e.sender).maximize());
-// ipcMain.on('window-unmaximize', (e) => BrowserWindow.fromWebContents(e.sender).unmaximize());
-// ipcMain.on('window-close', (e) => BrowserWindow.fromWebContents(e.sender).close());
+ipcMain.on('window-minimize', (e) =>
+  BrowserWindow.fromWebContents(e.sender).minimize()
+);
+ipcMain.on('window-maximize', (e) =>
+  BrowserWindow.fromWebContents(e.sender).maximize()
+);
+ipcMain.on('window-unmaximize', (e) =>
+  BrowserWindow.fromWebContents(e.sender).unmaximize()
+);
+ipcMain.on('window-close', (e) =>
+  BrowserWindow.fromWebContents(e.sender).close()
+);
+// 状态查询
+ipcMain.handle('window-is-maximized', (e) =>
+  BrowserWindow.fromWebContents(e.sender).isMaximized()
+);
 
-// // 状态查询
-// ipcMain.handle('window-is-maximized', (e) =>
-//   BrowserWindow.fromWebContents(e.sender).isMaximized()
-// );
 
-// // 状态变化通知
-// const setupWindowStateListeners = (win) => {
-//   win.on('maximize', () =>
-//     win.webContents.send('window-maximize-change', true)
-//   );
-//   win.on('unmaximize', () =>
-//     win.webContents.send('window-maximize-change', false)
-//   );
-// };
-
-// // 鼠标事件穿透
-// ipcMain.on('set-ignore-mouse-events', (e, ignore) => {
-//   const win = BrowserWindow.fromWebContents(e.sender);
-//   win.setIgnoreMouseEvents(ignore, { forward: true });
-// });
-
+// 鼠标事件穿透
+ipcMain.on('set-ignore-mouse-events', (e, ignore) => {
+  const win = BrowserWindow.fromWebContents(e.sender);
+  win.setIgnoreMouseEvents(ignore, { forward: true });
+});
+// 状态变化通知
+function setupWindowListeners(win) {
+  win.on('maximize', () =>
+    win.webContents.send('window-maximize-change', true)
+  );
+  win.on('unmaximize', () =>
+    win.webContents.send('window-maximize-change', false)
+  );
+};

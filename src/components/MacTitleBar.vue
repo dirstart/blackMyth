@@ -61,7 +61,9 @@ const setButtonHover = (isHovering) => {
   display: flex;
   align-items: center;
   padding: 0 12px;
-  background-color: rgba(255, 255, 255, 0.7);
+  /* background-color: rgba(255, 255, 255, 0.7); */
+    /* sss todo */
+    background: #089e8a;
   backdrop-filter: blur(10px);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -124,5 +126,6 @@ const setButtonHover = (isHovering) => {
 .mac-title-bar.is-maximized {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  background: transparent;
 }
 </style>
