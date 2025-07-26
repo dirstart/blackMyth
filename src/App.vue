@@ -1,105 +1,44 @@
 <template>
-  <div class="music-player-app">
-    <InkBg />
-    
-    <div class="app-main-container">
-      <TitleBar />
-      
-      <div class="app-content-area">
-        <div class="playlist-container">
-          <Playlist />
+  <div class="app h-screen flex-col overflow-hidden relative">
+    <!-- 可能的背景元素 -->
+    <div class="bg absolute inset-0"></div>
+
+    <!-- app 主内容 -->
+    <div class="main relative z-10 h-full flex-col">
+      <!-- 标题栏 -->
+      <div class="text-12 text-lighter mr16">标题</div>
+      <div class="text-32 text-danger">副标题</div>
+
+      <!-- 音乐内容 -->
+      <div class="content flex-1 flex-row overflow-hidden">
+        <!-- 音乐列表 -->
+        <div class="playlist mb32">
+          <div
+            class="text-10"
+            style="color:#089e8a"
+          >列表</div>
+          <div class="text-bold mb18">列表</div>
+          <div class="">test</div>
         </div>
-        
-        <div class="player-container">
-          <div class="player-content-area">
-            <Player />
+
+        <!-- 音乐容器 -->
+        <div class="player flex-col">
+          <div class="player-content flex-1">
+            <div>专辑</div>
           </div>
-          
-          <Controls />
+
+          <!-- 用户控制栏 -->
+          <div class="text-32 ctrl">音乐播放控制栏</div>
         </div>
-        
-        <Shortcuts />
+
+        <div class="shortcuts">快件按钮组件</div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { onMounted } from 'vue'
-import InkBg from './components/InkBg.vue'
-import TitleBar from './components/TitleBar.vue'
-import Playlist from './components/Playlist.vue'
-import Player from './components/Player.vue'
-import Controls from './components/Controls.vue'
-import Shortcuts from './components/Shortcuts.vue'
-import { useKeys } from './composables/useKeys'
-import { useWindow } from './composables/useWindow'
-
-export default {
-  name: 'MusicPlayerApp',
-  components: {
-    InkBg,
-    TitleBar,
-    Playlist,
-    Player,
-    Controls,
-    Shortcuts
-  },
-  setup() {
-    const { init } = useKeys()
-    const { handleBack } = useWindow()
-
-    onMounted(() => {
-      init()
-      
-      document.addEventListener('mouseup', (event) => {
-        if (event.button === 3) {
-          handleBack()
-        }
-      })
-    })
-
-    return {}
-  }
-}
+<script setup>
 </script>
 
-<style lang="less">
-.music-player-app {
-  min-height: 100vh;
-  background: #0a0a0a;
-  color: #f5f5f5;
-  overflow: hidden;
-  position: relative;
-}
+<style lang="less"></style>
 
-.app-main-container {
-  position: relative;
-  z-index: 10;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-content-area {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-.playlist-container {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-}
-
-.player-container {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-}
-
-.player-content-area {
-  flex: 1;
-}
-</style>
