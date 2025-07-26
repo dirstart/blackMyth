@@ -1,8 +1,9 @@
 <template>
   <div class="app h-screen flex-col overflow-hidden relative">
     <MacTitleBar />
+    <InkBg class="h-screen" />
     <!-- 可能的背景元素 -->
-    <div class="bg absolute inset-0" />
+    <!-- <div class="bg absolute inset-0" /> -->
 
     <!-- app 主内容 -->
     <div class="main relative z-10 h-full flex-col">

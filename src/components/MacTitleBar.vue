@@ -10,15 +10,15 @@
     <!-- 左侧控制按钮 -->
     <div class="window-controls">
       <button
-        class="close"
+        class="close z-9999"
         @click="close"
       ></button>
       <button
-        class="minimize"
+        class="minimize z-9999"
         @click="minimize"
       ></button>
       <button
-        class="maximize"
+        class="maximize z-9999"
         @click="toggleMaximize"
       ></button>
     </div>
@@ -53,8 +53,8 @@ const {
   padding: 0 12px;
   /* background-color: rgba(255, 255, 255, 0.7); */
     /* sss todo */
-    background: #089e8a;
-  backdrop-filter: blur(10px);
+    /* background: #089e8a; */
+      backdrop-filter: blur(10px);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   position: relative;
