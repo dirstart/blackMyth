@@ -1,0 +1,18 @@
+/* 全局样式表或组件内 */
+html, body {
+  margin: 0;
+  padding-top: env(titlebar-area-height, 30px); /* 预留标题栏高度 */
+}
+
+/* 修改标题栏区域样式 */
+::part(titlebar) {
+  // background: #2b2d3a !important; /* 与页面背景一致 */
+  // color: white !important;
+  background: #089e8a !important;
+  -webkit-app-region: drag; /* 允许拖动 */
+}
+
+/* 标题栏按钮样式（仅 macOS 可定制） */
+::part(window-controls) {
+  filter: invert(1); /* 白色按钮 */
+}

@@ -12,6 +12,8 @@ const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
+    titleBarStyle: 'default', // 保留系统默认标题栏（Windows/macOS）
+    transparent: true,       // 允许标题栏透明（可选）
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 		},
