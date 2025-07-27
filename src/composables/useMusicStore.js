@@ -66,8 +66,10 @@ export const createMusicStore = () => {
   };
 
   // 切换播放/暂停
+  // 检查togglePlay方法是否类似以下实现
   const togglePlay = () => {
     isPlaying.value = !isPlaying.value;
+    // 确保这里有正确的播放/暂停逻辑
   };
 
   // 上一首

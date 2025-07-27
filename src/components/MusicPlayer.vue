@@ -104,7 +104,15 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watchEffect, onUnmounted, watch } from "vue";
+import {
+  computed,
+  ref,
+  onMounted,
+  watchEffect,
+  onUnmounted,
+  watch,
+  defineExpose,
+} from "vue";
 import { useMusicStore } from "@/composables/useMusicStore";
 import albumCover from "@/icons/album.png";
 import { Howl } from "howler";
@@ -144,15 +152,34 @@ const togglePlay = () => {
     console.error("播放失败: sound实例不存在");
     return;
   }
-  // 调用store的togglePlay方法
-  storeTogglePlay();
-  // 根据isPlaying状态更新howler.js实例
-  if (isPlaying.value) {
-    sound.value.play();
-  } else {
+
+  // 先判断当前播放状态
+  const wasPlaying = isPlaying.value;
+  // 保存当前进度
+  const currentPosition = sound.value.seek();
+
+  // 根据当前状态执行操作
+  if (wasPlaying) {
+    // 当前是播放状态，要暂停
     sound.value.pause();
+    clearInterval(progressInterval.value);
+    // 确保进度被正确保存
+    updateProgress(currentPosition);
+  } else {
+    // 当前是暂停状态，要播放
+    // 先设置进度，再播放
+    sound.value.seek(currentPosition);
+    sound.value.play();
+    updateProgress(currentPosition);
+    updateProgressInterval();
   }
+
+  // 最后调用store的togglePlay方法
+  storeTogglePlay();
 };
+
+// 将 togglePlay 方法暴露给父组件
+defineExpose({ togglePlay });
 
 // 当前播放歌曲
 const currentSong = computed(() => {

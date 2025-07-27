@@ -1,64 +1,129 @@
 <template>
-  <div class="button-bar">
+  <div class="button-bar" @contextmenu.prevent="handleRightClick">
     <button
       v-for="button in buttons"
       :key="button.id"
       class="control-button"
       @click="handleButtonClick(button)"
     >
-      <span
-        class="shortcut"
-        v-if="button.shortcut"
-      >{{ button.shortcut }}</span>
+      <span class="shortcut" v-if="button.shortcut">{{ button.shortcut }}</span>
       <span class="label">{{ button.label }}</span>
     </button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted, defineProps } from "vue";
+import { useMusicStore } from "@/composables/useMusicStore";
 
+// 定义 props 接收音乐播放器引用
+const props = defineProps({
+  musicPlayerRef: { type: Object, required: true },
+});
+// 获取音乐商店的方法
+const { prevSong, nextSong, togglePlayMode, setVolume, volume } = useMusicStore();
+
+// 更新按钮定义以匹配用户需求的快捷键
 const buttons = ref([
-  { id: 1, shortcut: 'Tab', label: '显示/隐藏歌词', action: 'toggleLyrics' },
-  { id: 2, shortcut: 'A', label: '上一首', action: 'previousSong' },
-  { id: 3, shortcut: 'B', label: '播放/暂停', action: 'playPause' },
-  { id: 4, shortcut: 'D', label: '下一首', action: 'nextSong' },
-  { id: 5, shortcut: 'F', label: '切换播放模式', action: 'togglePlayMode' },
-  { id: 6, shortcut: 'G', label: '降低音量', action: 'volumeDown' },
-  { id: 7, shortcut: 'P', label: '提高音量', action: 'volumeUp' },
-  { id: 8, shortcut: '0', label: '返回', action: 'goBack' }
-])
+  { id: 1, shortcut: "A", label: "上一首", action: "previousSong" },
+  { id: 2, shortcut: "E", label: "播放/暂停", action: "playPause" },
+  { id: 3, shortcut: "D", label: "下一首", action: "nextSong" },
+  { id: 4, shortcut: "T", label: "切换播放模式", action: "togglePlayMode" },
+  { id: 5, shortcut: "<", label: "降低音量", action: "volumeDown" },
+  { id: 6, shortcut: ">", label: "提高音量", action: "volumeUp" },
+  { id: 7, shortcut: "右键", label: "返回", action: "goBack" },
+]);
 
+// 处理按钮点击
 const handleButtonClick = (button) => {
-  console.log(`Button clicked: ${button.label} (${button.action})`)
-  // 在这里添加具体的按钮功能逻辑
-  switch (button.action) {
-    case 'toggleLyrics':
-      // 切换歌词显示
-      break
-    case 'previousSong':
-      // 上一首歌
-      break
-    case 'playPause':
-      // 播放/暂停
-      break
-    case 'nextSong':
-      // 下一首歌
-      break
-    case 'togglePlayMode':
-      // 切换播放模式
-      break
-    case 'volumeDown':
-      // 降低音量
-      break
-    case 'volumeUp':
-      // 提高音量
-      break
-    case 'goBack':
-      // 返回
-      break
+  console.log(`Button clicked: ${button.label} (${button.action})`);
+  try {
+    switch (button.action) {
+      case "previousSong":
+        prevSong();
+        break;
+      case "playPause":
+        props.musicPlayerRef.togglePlay();
+        break;
+      case "nextSong":
+        nextSong();
+        break;
+      case "togglePlayMode":
+        togglePlayMode();
+        break;
+      case "volumeDown":
+        setVolume(Math.max(0, volume.value - 5));
+        break;
+      case "volumeUp":
+        setVolume(Math.min(100, volume.value + 5));
+        break;
+      case "goBack":
+        alert("返回功能已触发");
+        break;
+    }
+  } catch (error) {
+    console.error(`执行${button.label}操作时出错:`, error);
+    alert(`操作失败: ${error.message}`);
   }
-}
+};
+
+// 处理鼠标右键点击
+const handleRightClick = () => {
+  alert("返回功能已触发");
+};
+
+// 键盘快捷键处理
+const handleKeyDown = (e) => {
+  try {
+    switch (e.key) {
+      case "a":
+      case "A":
+        e.preventDefault();
+        prevSong();
+        break;
+      case "e":
+      case "E":
+        // 糟糕的实现。
+        console.log("通过E键触发播放/暂停功能");
+        props.musicPlayerRef.togglePlay();
+        break;
+      case "d":
+      case "D":
+        e.preventDefault();
+        nextSong();
+        break;
+      case "t":
+      case "T":
+        e.preventDefault();
+        togglePlayMode();
+        break;
+      case "<":
+      case "ArrowLeft":
+      case "ArrowDown":
+        e.preventDefault();
+        setVolume(Math.max(0, volume.value - 5));
+        break;
+      case ">":
+      case "ArrowUp":
+      case "ArrowRight":
+        e.preventDefault();
+        setVolume(Math.min(100, volume.value + 5));
+        break;
+    }
+  } catch (error) {
+    console.error(`键盘操作出错:`, error);
+  }
+};
+
+// 挂载时添加键盘监听
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+// 卸载时移除键盘监听
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+});
 </script>
 
 <style lang="less" scoped>
