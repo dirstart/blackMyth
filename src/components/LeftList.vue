@@ -7,20 +7,14 @@
         v-for="(song, index) in songs"
         :key="index"
         :class="{ active: currentSongIndex === index }"
-        @click="playSong(index)"
+        @click="handleSongClick(index)"
       >
         {{ song.title }}
       </li>
     </ul>
-    <button
-      class="load-local-btn"
-      @click="loadLocalMusic"
-    >读取本地音乐</button>
+    <button class="load-local-btn" @click="loadLocalMusic">读取本地音乐</button>
     <!-- 新增：选择音乐文件夹按钮 -->
-    <button
-      class="select-folder-btn"
-      @click="selectMusicFolder"
-    >选择音乐文件夹</button>
+    <button class="select-folder-btn" @click="selectMusicFolder">选择音乐文件夹</button>
   </div>
 </template>
 
@@ -105,6 +99,12 @@ onMounted(() => {
     loadMusicFromFolder(lastMusicFolder.value);
   }
 });
+
+// 修改playSong调用方式，确保正确传递索引
+const handleSongClick = (index) => {
+  console.log("尝试播放歌曲索引:", index);
+  playSong(index);
+};
 </script>
 
 <style scoped lang="less">

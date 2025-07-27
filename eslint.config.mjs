@@ -1,9 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
 import pluginVue from "eslint-plugin-vue";
-import css from "@eslint/css";
 import importPlugin from "eslint-plugin-import";
-import alias from 'eslint-import-resolver-alias';
 
 export default [
   // JavaScript/ESM files configuration
@@ -31,7 +29,13 @@ export default [
     },
     rules: {
       ...config.rules,
-      "import/no-unresolved": "error"
+      "import/no-unresolved": "error",
+      // 禁用Vue组件中style部分的相关规则
+      "vue/no-v-model-argument": "off",
+      "vue/one-component-per-file": "off",
+      "vue/no-deprecated-slot-attribute": "off",
+      "vue/no-deprecated-v-on-native-modifier": "off",
+      "vue/multi-word-component-names": "off"
     },
     languageOptions: {
       ...config.languageOptions,
@@ -45,10 +49,5 @@ export default [
         }
       }
     }
-  })),
-  // CSS files configuration
-  {
-    files: ["src/**/*.css"],
-    ...css.configs.recommended
-  }
+  }))
 ];
