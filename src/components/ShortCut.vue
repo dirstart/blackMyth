@@ -31,7 +31,6 @@ const buttons = ref([
   { id: 4, shortcut: "T", label: "切换播放模式", action: "togglePlayMode" },
   { id: 5, shortcut: "<", label: "降低音量", action: "volumeDown" },
   { id: 6, shortcut: ">", label: "提高音量", action: "volumeUp" },
-  { id: 7, shortcut: "右键", label: "返回", action: "goBack" },
 ]);
 
 // 处理按钮点击
