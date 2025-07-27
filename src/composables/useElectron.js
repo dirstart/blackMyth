@@ -1,8 +1,9 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 
 export function useElectron() {
   const isElectron = ref(false);
   const isMaximized = ref(false);
+  const isWindowFocused = ref(true);
   const api = ref(null);
 
   const init = () => {
@@ -14,10 +15,17 @@ export function useElectron() {
       api.value.onMaximize((maximized) => {
         isMaximized.value = maximized;
       });
+      // 监听窗口焦点变化
+      api.value.onWindowFocus((focused) => {
+        isWindowFocused.value = focused;
+      });
 
       // 获取初始状态
       api.value.isMaximized().then((maximized) => {
         isMaximized.value = maximized;
+      });
+      api.value.isFocused().then((focused) => {
+        isWindowFocused.value = focused;
       });
     }
   };
@@ -30,13 +38,110 @@ export function useElectron() {
   };
   const close = () => api.value?.close();
 
+  // 添加批量读取本地音乐文件的API
+  const openMusicFileDialog = async (options = {}) => {
+    if (!api.value || !api.value.openFileDialog) {
+      console.warn('Electron API not available or openFileDialog not implemented');
+      return [];
+    }
+
+    // 默认配置，支持常见音乐格式
+    const defaultOptions = {
+      title: '选择音乐文件',
+      filters: [{
+        name: '音频文件',
+        extensions: ['mp3', 'wav', 'flac', 'm4a', 'ogg', 'aac', 'wma']
+      }],
+      properties: ['openFile', 'multiSelections'] // 支持多选
+    };
+
+    // 合并用户选项与默认选项
+    const dialogOptions = { ...defaultOptions, ...options };
+
+    try {
+      return await api.value.openFileDialog(dialogOptions);
+    } catch (error) {
+      console.error('打开文件对话框失败:', error);
+      return [];
+    }
+  };
+
+  // 清理监听 (新增)
+  const cleanup = () => {
+    if (api.value) {
+      api.value.removeAllListeners?.('window-maximize-change');
+      api.value.removeAllListeners?.('window-focus-change');
+    }
+  };
+
+  // 添加解析音频元数据的API
+  const parseAudioMetadata = async (filePath) => {
+    if (!api.value || !api.value.parseAudioMetadata) {
+      console.warn('parseAudioMetadata API not available');
+      return null;
+    }
+
+    try {
+      return await api.value.parseAudioMetadata(filePath);
+    } catch (error) {
+      console.error('解析音频元数据失败:', error);
+      return null;
+    }
+  };
+
+  // 添加选择音乐文件夹的API
+  const openMusicFolderDialog = async (options = {}) => {
+    if (!api.value || !api.value.openFileDialog) {
+      console.warn('Electron API not available or openFileDialog not implemented');
+      return null;
+    }
+
+    // 默认配置
+    const defaultOptions = {
+      title: '选择音乐文件夹',
+      properties: ['openDirectory'] // 选择目录
+    };
+
+    // 合并用户选项与默认选项
+    const dialogOptions = { ...defaultOptions, ...options };
+
+    try {
+      const result = await api.value.openFileDialog(dialogOptions);
+      return result && result.length > 0 ? result[0] : null;
+    } catch (error) {
+      console.error('打开文件夹对话框失败:', error);
+      return null;
+    }
+  };
+
+  // 添加读取文件夹内音乐文件的API
+  const readMusicFolder = async (folderPath) => {
+    if (!api.value || !api.value.readMusicFolder) {
+      console.warn('readMusicFolder API not available');
+      return [];
+    }
+
+    try {
+      return await api.value.readMusicFolder(folderPath);
+    } catch (error) {
+      console.error('读取音乐文件夹失败:', error);
+      return [];
+    }
+  };
+
   onMounted(init);
+  onUnmounted(cleanup);
 
   return {
     isElectron,
     isMaximized,
+    isWindowFocused,
     minimize,
     toggleMaximize,
-    close
+    close,
+    openMusicFileDialog,
+    parseAudioMetadata,
+    openMusicFolderDialog,
+    readMusicFolder
   };
 }

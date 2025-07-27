@@ -1,57 +1,87 @@
 # 黑神话播放器 - BlackMyth Player 🎵
+一个基于 Vue 3 + Electron 构建的桌面音乐播放器，专注于播放黑神话·悟空的原声音乐。设计简洁，功能专注，让你沉浸式体验游戏原声。
 
-一个基于 Vue 3 + Electron + JS 构建的简易桌面音乐播放器，只播放黑神话·悟空的原声音乐。**3 晚开发内可完成。**
+## 第一版本
 
-## ✨ 功能特性
+![](./doc/进度1.jpg)
+![](./doc/进度2.jpg)
 
-- 播放黑神话音乐（本地音频）
-- 简洁 UI，展示歌曲列表、封面、播放控制栏
-- 支持播放、暂停、切换、音量调节
+## ✨ 核心功能
+- 🎶 本地音乐播放：支持播放黑神话·悟空原声音乐
+- 🎵 歌曲列表管理：左侧列表展示所有可用歌曲
+- 🎼 专辑封面展示：大尺寸专辑封面，视觉效果出众
+- ▶️ 播放控制：支持播放、暂停、上一首、下一首
+- 🔊 音量调节：便捷控制播放音量
+- 🎨 简洁UI：深色主题设计，专注音乐体验
+## 🛠️ 技术栈
+- 前端框架 ：Vue 3 Composition API
+- 桌面应用 ：Electron
+- 构建工具 ：Vite
+- 音频处理 ：HTML5 Audio API
+- 样式处理 ：Less
+- 代码规范 ：ESLint, Lefthook
+- 包管理 ：npm
 
-## 🧱 技术栈/工程化
-
-- Electron（构建桌面应用）
-- vue 3 + JS（构建前端 UI）
-- Vite（快速构建工具）
-- HTML5 `<audio>` API（实现音频播放）
-- less
-- lefthook
-
-## 📦 快速开始
-
-### 1. 克隆项目并安装依赖
-
-```bash
-pnpm install
-```
-
-### 2.开发模式启动
+## 🚀 快速开始
+### 1. 安装依赖
 
 ```
-pnpm dev
+npm install
 ```
 
-### 3.构建打包
+2. 开发模式启动
 
 ```
-pnpm build
+npm run dev
 ```
 
-构建后可在 `dist/` 下获取可运行的桌面程序
+### 3. 项目结构
+```
+blackMyth/
+├── build/              # 构建配置
+│   ├── vite.main.config.mjs     # 主进程配置
+│   ├── vite.preload.config.mjs  # 预加载脚本配置
+│   └── vite.renderer.config.mjs # 渲染进程配置
+├── doc/                # 文档和资源
+├── public/             # 公共资源
+├── src/
+│   ├── components/     # Vue 组件
+│   │   ├── LeftList.vue     # 歌曲列表
+│   │   ├── MusicPlayer.vue  # 音乐播放器
+│   │   └── MacTitleBar.vue  # 标题栏
+│   ├── composables/    # 组合式函数
+│   │   ├── useMusicStore.js # 音乐状态管理
+│   │   └── useElectron.js   # Electron 交互
+│   ├── icons/          # 图标资源
+│   ├── style/          # 样式文件
+│   ├── App.vue         # 主应用组件
+│   └── main.js         # 入口文件
+├── package.json        # 项目依赖
+└── README.md           # 项目文档
+```
 
-### 4.项目结构
 
-## 项目流程图
-
+🔄 项目流程
 ```mermaid
 graph TD
     A[启动 Electron 主进程] --> B[创建浏览器窗口]
     B --> C[加载 Vue 应用]
     C --> D[初始化音乐列表]
     D --> E[显示歌曲列表和播放器组件]
-    E --> F{用户点击播放}
-    F --> G[更新 audio 播放状态]
-    G --> H[展示当前播放歌曲信息]
-    F --> I[支持切换歌曲/暂停/调节音量]
-
+    E --> F{用户操作}
+    F --> G[播放/暂停音乐]
+    F --> H[切换歌曲]
+    F --> I[调节音量]
+    G --> J[更新播放状态和UI]
+    H --> J
+    I --> J
 ```
+
+本项目设计为简洁的音乐播放器，专注于黑神话·悟空原声音乐的播放体验。项目采用 Vue 3 的 Composition API 结合 Electron 构建跨平台桌面应用，使用 Vite 提供快速的开发体验。
+
+音乐播放功能通过 HTML5 Audio API 实现，状态管理使用了简单的组合式函数模式，确保代码简洁且易于维护。
+
+## 💡 提示
+- 确保你的系统已安装 Node.js 和 npm
+- 开发过程中遇到问题可查看 doc/problem.md 的解决方案
+- 如需自定义构建配置，可修改 build/ 目录下的 Vite 配置文件

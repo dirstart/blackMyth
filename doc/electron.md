@@ -176,3 +176,19 @@ Electron 的主进程，拥有完全【操作系统】访问的权限。
 2.渲染进程经过 Vue3 编译后，通过 mainWindow.loadURL 加载到 Electron 窗口
 3.生产环境，Vite 打包结果通过 mainWindow.loadFile()加载。
 
+```javascript
+// 1️⃣ 单向IPC：渲染进程发命令，主进程执行
+ipcMain.on('window-minimize', (e) => win.minimize())
+
+// 2️⃣ 双向IPC：渲染进程问状态，主进程回答
+ipcMain.handle('window-is-maximized', (e) => win.isMaximized())
+
+// 3️⃣ 主进程主动通知：窗口变化时主动告诉渲染进程
+win.on('maximize', () => win.webContents.send('window-maximize-change', true))
+```
+
+## 🧩 记忆口诀
+- on ：单向命令（"做这件事"）
+- handle ：双向问答（"现在是什么状态？"）
+- send ：主进程主动通知（"告诉你个消息"）
+就是这么简单！3种通信对应3种不同的使用场景

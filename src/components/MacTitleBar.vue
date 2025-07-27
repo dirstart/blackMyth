@@ -2,69 +2,59 @@
   <div
     v-if="isElectron"
     class="mac-title-bar"
-    :class="{ 'is-maximized': isMaximized }"
+    :class="{
+      'is-maximized': isMaximized,
+      'is-blur': !isWindowFocused
+    }"
   >
     <!-- 左侧控制按钮 -->
     <div class="window-controls">
       <button
-        class="close"
+        class="close z-9999"
         @click="close"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
       <button
-        class="minimize"
+        class="minimize z-9999"
         @click="minimize"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
       <button
-        class="maximize"
+        class="maximize z-9999"
         @click="toggleMaximize"
-        @mouseenter="setButtonHover(true)"
-        @mouseleave="setButtonHover(false)"
       ></button>
     </div>
 
     <!-- 居中标题 -->
-    <div class="title">
+    <!-- <div class="title">
       <slot>Electron App</slot>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
-import { useElectron } from '../composables/useElectron';
+import { useElectron } from '@/composables/useElectron';
 
 const {
   isElectron,
   isMaximized,
+  isWindowFocused,
   minimize,
   toggleMaximize,
   close
 } = useElectron();
-
-debugger
-console.log('🍀🍀🍀🍀', 'isElectron', isElectron);
-
-// 按钮悬停效果控制
-const setButtonHover = (isHovering) => {
-  if (!isElectron.value) return;
-  window.electronAPI?.setIgnoreMouseEvents(!isHovering);
-};
 </script>
 
 <style scoped>
 .mac-title-bar {
+  /* 允许拖动 */
   -webkit-app-region: drag;
-  height: 28px;
+    height: 32px;
   display: flex;
   align-items: center;
   padding: 0 12px;
   /* background-color: rgba(255, 255, 255, 0.7); */
     /* sss todo */
-    background: #089e8a;
-  backdrop-filter: blur(10px);
+    /* background: #089e8a; */
+      backdrop-filter: blur(10px);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   position: relative;
@@ -78,6 +68,7 @@ const setButtonHover = (isHovering) => {
 }
 
 .window-controls {
+  /* 按钮 */
   -webkit-app-region: no-drag;
   display: flex;
   gap: 8px;
@@ -109,23 +100,18 @@ const setButtonHover = (isHovering) => {
   background-color: #27c93f;
   border: 0.5px solid #1aab29;
 }
-
-.title {
-  flex: 1;
-  text-align: center;
-  font-size: 13px;
-  color: #333;
-  opacity: 0.9;
-}
-
-.dark .title {
-  color: #f0f0f0;
-}
-
 /* 最大化时移除圆角 */
 .mac-title-bar.is-maximized {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background: transparent;
+}
+/* 新增失焦样式 */
+.mac-title-bar.is-blur {
+  opacity: 0.8;
+}
+
+.mac-title-bar.is-blur .window-controls button {
+  filter: grayscale(50%);
 }
 </style>

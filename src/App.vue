@@ -1,60 +1,51 @@
 <template>
   <div class="app h-screen flex-col overflow-hidden relative">
-    <MacTitleBar />
-    <!-- 可能的背景元素 -->
-    <div class="bg absolute inset-0" />
+    <MacTitleBar class="z-9999 basis-32" />
 
     <!-- app 主内容 -->
-    <div class="main relative z-10 h-full flex-col">
-      <!-- 标题栏 -->
-      <div class="text-12 text-lighter mr16">
-        标题
-      </div>
-      <div class="text-32 text-danger">
-        副标题
-      </div>
+    <div class="main relative z-10 flex-1 flex-row">
+      <LeftList class="basis-250" />
 
       <!-- 音乐内容 -->
-      <div class="content flex-1 flex-row overflow-hidden">
-        <!-- 音乐列表 -->
-        <div class="playlist mb32">
-          <div
-            class="text-10"
-            style="color:#089e8a"
-          >
-            列表
-          </div>
-          <div class="text-bold mb18">
-            列表
-          </div>
-          <div class="">
-            test
-          </div>
-        </div>
-
-        <!-- 音乐容器 -->
-        <div class="player flex-col">
-          <div class="player-content flex-1">
-            <div>专辑</div>
-          </div>
-
-          <!-- 用户控制栏 -->
-          <div class="text-32 ctrl">
-            音乐播放控制栏
-          </div>
-        </div>
-
-        <div class="shortcuts">
-          快件按钮组件
+      <div class="content flex-1 flex-col">
+        <!-- 音乐播放器 -->
+        <MusicPlayer class="basis-150" />
+        <!-- 快捷按键 -->
+        <div class="shortcuts basis-100">
+          快捷按钮组件
+          <ShortCut />
         </div>
       </div>
     </div>
+
+    <!-- 背景 -->
+    <InkBg class="h-screen z--1" />
   </div>
 </template>
 
 <script setup>
-import MacTitleBar from './components/MacTitleBar.vue';
+import { provide } from 'vue';
+import { createMusicStore } from '@/composables/useMusicStore';
+import InkBg from '@/components/InkBg.vue';
+import MacTitleBar from '@/components/MacTitleBar.vue';
+import LeftList from '@/components/LeftList.vue';
+import ShortCut from '@/components/ShortCut.vue';
+import MusicPlayer from '@/components/MusicPlayer.vue'; // 新增导入
+
+// 创建并提供音乐数据存储
+const musicStore = createMusicStore();
+provide('musicStore', musicStore);
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+.content {
+  background-color: rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  
+  .player-content {
+    padding: 20px;
+}
+</style>
 
