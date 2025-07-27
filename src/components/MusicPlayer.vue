@@ -128,18 +128,22 @@ const {
   togglePlayMode,
   setVolume,
   updateProgress,
+  togglePlay: storeTogglePlay, // 重命名store的togglePlay方法
 } = useMusicStore();
 
 // 手动实现控制方法
 const togglePlay = () => {
-  if (!sound.value) return;
+  if (!sound.value) {
+    console.error("播放失败: sound实例不存在");
+    return;
+  }
+  // 调用store的togglePlay方法
+  storeTogglePlay();
+  // 根据isPlaying状态更新howler.js实例
   if (isPlaying.value) {
-    sound.value.pause();
+    sound.value.play();
   } else {
-    sound.value.play().catch((err) => {
-      console.error("播放失败:", err);
-      isPlaying.value = false;
-    });
+    sound.value.pause();
   }
 };
 
@@ -311,18 +315,16 @@ const stopCurrentSongWatch = watchEffect(() => {
 });
 
 // 监听播放状态变化
-const stopPlayStatusWatch = watchEffect(() => {
-  if (sound.value) {
-    if (isPlaying.value && sound.value.paused) {
-      sound.value.play().catch((err) => {
-        console.error("播放失败:", err);
-        isPlaying.value = false;
-      });
-    } else if (!isPlaying.value && !sound.value.paused) {
-      sound.value.pause();
-    }
-  }
-});
+// 移除播放状态监听
+// const stopPlayStatusWatch = watchEffect(() => {
+//   if (sound.value) {
+//     if (isPlaying.value && sound.value.paused) {
+//       sound.value.play();
+//     } else if (!isPlaying.value && !sound.value.paused) {
+//       sound.value.pause();
+//     }
+//   }
+// });
 
 // 监听音量变化
 const stopVolumeWatch = watchEffect(() => {
@@ -334,7 +336,7 @@ const stopVolumeWatch = watchEffect(() => {
 // 清理监听器
 onUnmounted(() => {
   stopCurrentSongWatch();
-  stopPlayStatusWatch();
+  // stopPlayStatusWatch();
   stopVolumeWatch();
   if (sound.value) {
     sound.value.stop();
