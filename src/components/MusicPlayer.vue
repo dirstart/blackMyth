@@ -40,32 +40,9 @@
         </div>
       </div>
 
-      <!-- 控制按钮区域 -->
+      <!-- 控制按钮区域 - 修改为单行布局 -->
       <div class="controls-section">
-        <!-- 播放控制按钮 -->
-        <div class="play-buttons">
-          <button class="control-btn" @click="prevSong" title="上一首">
-            <Previous class="icon" />
-          </button>
-          <button
-            class="play-btn"
-            @click="togglePlay"
-            :title="isPlaying ? '暂停' : '播放'"
-          >
-            <template v-if="isPlaying">
-              <Pause class="icon" />
-            </template>
-            <template v-else>
-              <Play class="icon" />
-            </template>
-          </button>
-          <button class="control-btn" @click="nextSong" title="下一首">
-            <Next class="icon" />
-          </button>
-        </div>
-
-        <!-- 模式和音量控制 -->
-        <div class="extra-controls">
+        <div class="all-controls">
           <button
             class="mode-btn"
             @click="togglePlayMode"
@@ -78,6 +55,28 @@
               <Repeat class="icon" />
             </template>
           </button>
+
+          <button class="control-btn" @click="prevSong" title="上一首">
+            <Previous class="icon" />
+          </button>
+
+          <button
+            class="play-btn"
+            @click="togglePlay"
+            :title="isPlaying ? '暂停' : '播放'"
+          >
+            <template v-if="isPlaying">
+              <Pause class="icon" />
+            </template>
+            <template v-else>
+              <Play class="icon" />
+            </template>
+          </button>
+
+          <button class="control-btn" @click="nextSong" title="下一首">
+            <Next class="icon" />
+          </button>
+
           <div class="volume-control">
             <button
               class="volume-btn"
@@ -470,62 +469,74 @@ onUnmounted(() => {
 
     .controls-section {
       width: 100%;
+      max-width: 600px;
 
-      .play-buttons {
+      .all-controls {
         display: flex;
+        align-items: center;
         justify-content: center;
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 15px;
+        width: 100%;
 
+        .mode-btn,
         .control-btn,
         .play-btn,
-        .mode-btn,
         .volume-btn {
           background: #222222;
           border: 1px solid #444444;
-          border-radius: 4px;
+          border-radius: 50%;  // 圆形按钮
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 8px;
+          padding: 10px;
+          color: #ffffff;
 
           &:hover {
             background: #333333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
           }
 
           &:active {
-            transform: translateY(1px);
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
           }
 
           .icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             fill: currentColor;
+            transition: fill 0.3s ease;
           }
         }
 
         .play-btn {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-        }
-      }
+          width: 50px;
+          height: 50px;
+          background: #1a1a1a;
+          border: 2px solid #555555;
 
-      .extra-controls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
+          .icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          &:hover {
+            background: #2a2a2a;
+            border-color: #777777;
+          }
+        }
 
         .volume-control {
           display: flex;
           align-items: center;
           gap: 8px;
+          margin-left: 10px;
 
           .volume-slider-container {
-            width: 120px;
+            width: 100px;
 
             .volume-slider {
               width: 100%;
@@ -543,6 +554,12 @@ onUnmounted(() => {
                 background: #ffffff;
                 border-radius: 50%;
                 cursor: pointer;
+                transition: all 0.2s;
+              }
+
+              &::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+                background: #cccccc;
               }
             }
           }

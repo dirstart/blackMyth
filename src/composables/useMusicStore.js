@@ -11,7 +11,7 @@ export const createMusicStore = () => {
   // 上次选择的文件夹路径
   const lastMusicFolder = ref('');
   // 新增播放相关状态
-  const playMode = ref('order'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
+  const playMode = ref('shuffle'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
   const volume = ref(80); // 音量 0-100
   const currentTime = ref(0); // 当前播放时间(秒)
   const duration = ref(0); // 歌曲总时长(秒)
@@ -98,7 +98,7 @@ export const createMusicStore = () => {
 
   // 切换播放模式
   const togglePlayMode = () => {
-    const modes = ['order', 'repeat', 'shuffle'];
+    const modes = ['repeat', 'shuffle'];
     const currentModeIndex = modes.indexOf(playMode.value);
     playMode.value = modes[(currentModeIndex + 1) % modes.length];
   };

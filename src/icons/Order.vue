@@ -2,22 +2,22 @@
   <svg
     :width="size"
     :height="size"
-    fill="white"
+    fill="none"
+    stroke="currentColor"
     viewBox="0 0 24 24"
   >
     <path
-      d="M16 3L20 7M20 7H13M20 7V14M8 21L4 17M4 17H11M4 17V10"
-      stroke="white"
-      stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
+      stroke-width="2"
+      d="M3 10h18M8 15l4-4-4-4M16 15l-4-4 4-4"
     />
   </svg>
 </template>
 
 <script>
 export default {
-  name: "ShuffleIcon",
+  name: "OrderIcon",
   props: {
     size: {
       type: [String, Number],
