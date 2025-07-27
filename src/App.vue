@@ -14,10 +14,10 @@
         </div>
         <!-- 音乐播放器 -->
         <div class="player basis-150">
-          <div>播放标题</div>
-          <div>播放进度</div>
+          <div>黑神话悟空：主题音乐</div>
+          <div>播放进度条可拖动</div>
+          <div>播放控制：随机播放</div>
         </div>
-
         <div class="shortcuts basis-100">
           快件按钮组件
           <ShortCut />
@@ -39,7 +39,6 @@ import ShortCut from '@/components/ShortCut.vue';
 
 <style lang="less">
 .content {
-  background-color: #089e8a;
 }
 </style>
 

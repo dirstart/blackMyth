@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useElectron } from '../composables/useElectron';
+import { useElectron } from '@/composables/useElectron';
 
 const {
   isElectron,

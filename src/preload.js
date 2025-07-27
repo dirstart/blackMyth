@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   unmaximize: () => ipcRenderer.send('window-unmaximize'),
   close: () => ipcRenderer.send('window-close'),
   isFocused: () => ipcRenderer.invoke('window-is-focused'),
+  openFileDialog: (options) => ipcRenderer.invoke('open-file-dialog', options),
   onWindowFocus: (callback) => {
     ipcRenderer.on('window-focus-change', (_, focused) => callback(focused));
   },

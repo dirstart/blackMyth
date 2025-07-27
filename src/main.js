@@ -1,5 +1,5 @@
 import path from "node:path";
-import { app, ipcMain, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow, dialog } from "electron";
 import started from "electron-squirrel-startup";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -88,6 +88,16 @@ ipcMain.handle('window-is-maximized', (e) =>
 ipcMain.handle('window-is-focused', (e) =>
   BrowserWindow.fromWebContents(e.sender).isFocused()
 );
+// 实现打开文件对话框的处理
+ipcMain.handle('open-file-dialog', async (event, options) => {
+  try {
+    const result = await dialog.showOpenDialog(options);
+    return result.filePaths || [];
+  } catch (error) {
+    console.error('打开文件对话框失败:', error);
+    return [];
+  }
+});
 
 // 【主进程主动推送】状态变化通知，win.on 监听当前【窗口实例】的原生事件
 function setupWindowListeners(win) {

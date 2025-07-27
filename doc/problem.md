@@ -79,3 +79,13 @@ biome并不完全支持 Vue3：难受，https://github.com/biomejs/biome/discuss
 ## Alt + Tab 无法唤醒 Electron 项目
 > 发现打包之后，就没有这个问题了。
 > 仅开发环境存在，先忽略。
+
+## Electron读取本地文件夹api出错
+Electron API not available or openFileDialog not implemented
+
+【低级错误】vue3时机搞错了，先通过 `useElectron` 引入，
+然后在自定义函数体里面，直接使用引入的结果。
+
+## 旧知识
+- *.mp3 ：仅忽略当前目录下的.mp3文件
+- **/*.mp3 ：使用双星号表示递归匹配所有子目录，会忽略项目中任何位置的.mp3文件

@@ -10,10 +10,19 @@
         {{ item }}
       </li>
     </ul>
+    <button
+      class="load-local-btn"
+      @click="loadLocalMusic"
+    >
+      读取本地音乐
+    </button>
   </div>
 </template>
 
 <script setup>
+import { useElectron } from '@/composables/useElectron'
+const { openMusicFileDialog } = useElectron();
+
 const items = [
   "云宫讯音",
   "英雄气概穿时休",
@@ -27,6 +36,25 @@ const items = [
   "胖长二百七十岁",
   "正是山中黑风王"
 ];
+
+// 读取本地音乐文件
+const loadLocalMusic = async () => {
+  const files = await openMusicFileDialog({
+    title: '选择本地音乐文件',
+    filters: [{
+      name: '音频文件',
+      extensions: ['mp3', 'wav', 'flac', 'm4a']
+    }],
+    properties: ['openFile', 'multiSelections']
+  })
+
+  if (files && files.length > 0) {
+    // 这里可以添加处理选中文件的逻辑
+    console.log('选中的音乐文件:', files)
+    // 例如: 将文件添加到播放列表
+    // items.push(...files.map(file => file.name))
+  }
+}
 </script>
 
 <style scoped lang="less">
@@ -60,5 +88,21 @@ const items = [
 
 .list-item:hover {
   background-color: #333;
+}
+// 读取本地音乐按钮样式
+.load-local-btn {
+  width: 100%;
+  padding: 8px 0;
+  margin-top: 15px;
+  background-color: #414141;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #555;
+  }
 }
 </style>

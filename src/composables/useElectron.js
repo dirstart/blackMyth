@@ -3,8 +3,9 @@ import { onMounted, ref, onUnmounted } from 'vue';
 export function useElectron() {
   const isElectron = ref(false);
   const isMaximized = ref(false);
-  const isWindowFocused = ref(true); // 焦点状态、默认聚焦
+  const isWindowFocused = ref(true);
   const api = ref(null);
+  const isReady = ref(false); // 添加加载状态
 
   const init = () => {
     if (typeof window !== 'undefined' && window.electronAPI) {
@@ -27,6 +28,7 @@ export function useElectron() {
       api.value.isFocused().then((focused) => {
         isWindowFocused.value = focused;
       });
+      isReady.value = true; // 初始化完成后设置为 true
     }
   };
 
@@ -38,6 +40,39 @@ export function useElectron() {
   };
   const close = () => api.value?.close();
 
+  // 添加批量读取本地音乐文件的API
+  const openMusicFileDialog = async (options = {}) => {
+    if (!isReady.value) {
+      console.warn('Electron API 尚未初始化完成');
+      return [];
+    }
+
+    if (!api.value || !api.value.openFileDialog) {
+      console.warn('Electron API not available or openFileDialog not implemented');
+      return [];
+    }
+
+    // 默认配置，支持常见音乐格式
+    const defaultOptions = {
+      title: '选择音乐文件',
+      filters: [{
+        name: '音频文件',
+        extensions: ['mp3', 'wav', 'flac', 'm4a', 'ogg', 'aac', 'wma']
+      }],
+      properties: ['openFile', 'multiSelections'] // 支持多选
+    };
+
+    // 合并用户选项与默认选项
+    const dialogOptions = { ...defaultOptions, ...options };
+
+    try {
+      return await api.value.openFileDialog(dialogOptions);
+    } catch (error) {
+      console.error('打开文件对话框失败:', error);
+      return [];
+    }
+  };
+
   // 清理监听 (新增)
   const cleanup = () => {
     if (api.value) {
@@ -45,6 +80,7 @@ export function useElectron() {
       api.value.removeAllListeners?.('window-focus-change');
     }
   };
+
   onMounted(init);
   onUnmounted(cleanup);
 
@@ -54,6 +90,8 @@ export function useElectron() {
     isWindowFocused,
     minimize,
     toggleMaximize,
-    close
+    close,
+    openMusicFileDialog,
+    isReady // 导出加载状态
   };
 }
