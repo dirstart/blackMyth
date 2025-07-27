@@ -4,7 +4,7 @@
 
     <!-- app 主内容 -->
     <div class="main relative z-10 flex-1 flex-row">
-      <LeftList class="basis-250" />
+      <LeftList class="basis-350" />
 
       <!-- 音乐内容 -->
       <div class="content flex-1 flex-col">
