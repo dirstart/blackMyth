@@ -373,7 +373,7 @@ onUnmounted(() => {
   flex: 1;
   padding: 20px;
   color: #ffffff;
-  background: #121212;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -484,7 +484,7 @@ onUnmounted(() => {
         .volume-btn {
           background: #222222;
           border: 1px solid #444444;
-          border-radius: 50%;  // 圆形按钮
+          border-radius: 50%; // 圆形按钮
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
