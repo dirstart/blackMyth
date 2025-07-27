@@ -1,7 +1,7 @@
 import path from "node:path";
 import { app, ipcMain, BrowserWindow, dialog } from "electron";
 import started from "electron-squirrel-startup";
-const mm = require('music-metadata');
+import * as mm from 'music-metadata'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -27,6 +27,7 @@ const createWindow = () => {
     webSecurity: false, // 仅在开发阶段使用，生产环境建议关闭
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
+      webSecurity: false,
 		},
 	});
 
