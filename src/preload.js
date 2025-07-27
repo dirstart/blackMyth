@@ -27,9 +27,3 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 在 electronAPI 对象中添加
   readMusicFolder: (folderPath) => ipcRenderer.invoke('read-music-folder', folderPath)
 });
-
-// sss todo debug
-// 预加载脚本中添加调试
-ipcRenderer.on('window-focus', (_, focused) => {
-  console.log('窗口焦点状态:', focused);
-});

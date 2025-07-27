@@ -1,6 +1,6 @@
 <template>
   <div class="left-list-container">
-    <div class="title">黑神话：悟空 主题音乐</div>
+    <div class="title">小曲</div>
     <ul class="list">
       <li
         class="list-item"

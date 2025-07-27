@@ -89,3 +89,6 @@ Electron API not available or openFileDialog not implemented
 ## 旧知识
 - *.mp3 ：仅忽略当前目录下的.mp3文件
 - **/*.mp3 ：使用双星号表示递归匹配所有子目录，会忽略项目中任何位置的.mp3文件
+
+## 读取不了文件
+mac 下使用 sudo 启动：`sudo npm start`
