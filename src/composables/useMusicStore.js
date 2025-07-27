@@ -59,6 +59,7 @@ export const createMusicStore = () => {
   };
 
   // 播放指定歌曲
+  // 移除具体播放逻辑，只保留状态和基础方法
   const playSong = (index) => {
     currentSongIndex.value = index;
     isPlaying.value = true;
@@ -69,7 +70,6 @@ export const createMusicStore = () => {
     isPlaying.value = !isPlaying.value;
   };
 
-  // 新增播放控制方法
   // 上一首
   const prevSong = () => {
     if (songs.value.length === 0) return;
@@ -77,25 +77,21 @@ export const createMusicStore = () => {
       currentSongIndex.value - 1 + songs.value.length
     ) % songs.value.length;
     isPlaying.value = true;
-    // 实际播放逻辑需配合音频元素实现
   };
 
   // 下一首
   const nextSong = () => {
     if (songs.value.length === 0) return;
     if (playMode.value === 'shuffle') {
-      // 随机播放逻辑
       let randomIndex;
       do {
         randomIndex = Math.floor(Math.random() * songs.value.length);
       } while (randomIndex === currentSongIndex.value && songs.value.length > 1);
       currentSongIndex.value = randomIndex;
     } else {
-      // 顺序播放逻辑
       currentSongIndex.value = (currentSongIndex.value + 1) % songs.value.length;
     }
     isPlaying.value = true;
-    // 实际播放逻辑需配合音频元素实现
   };
 
   // 切换播放模式

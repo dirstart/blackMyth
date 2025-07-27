@@ -160,7 +160,7 @@ ipcMain.handle('parse-audio-metadata', async (event, filePath) => {
       title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
       artist: metadata.common.artist || '未知艺术家',
       album: metadata.common.album || '未知专辑',
-      format: path.extname(filePath).slice(1).toUpperCase() || metadata.format.container?.toUpperCase(),
+      format: metadata.format.container?.toUpperCase(),
       duration: formattedDuration,
       durationSeconds: duration,
       albumCover: albumCover,

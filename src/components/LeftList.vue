@@ -101,9 +101,9 @@ onMounted(() => {
 });
 
 // 修改playSong调用方式，确保正确传递索引
+// 处理歌曲点击
 const handleSongClick = (index) => {
-  console.log("尝试播放歌曲索引:", index);
-  playSong(index);
+  playSong(index); // 只需更新状态，播放逻辑在MusicPlayer中处理
 };
 </script>
 

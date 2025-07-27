@@ -1,3 +1,4 @@
+`
 <template>
   <div class="music-player-container">
     <!-- 无歌曲播放时显示的占位符 -->
@@ -106,9 +107,7 @@
 import { computed, ref, onMounted, watchEffect, onUnmounted } from "vue";
 import { useMusicStore } from "@/composables/useMusicStore";
 import albumCover from "@/icons/album.png";
-// 导入howler.js
 import { Howl } from "howler";
-// 导入图标组件
 import Play from "@/icons/Play.vue";
 import Pause from "@/icons/Pause.vue";
 import Next from "@/icons/Next.vue";
@@ -126,16 +125,48 @@ const {
   volume,
   currentTime,
   duration,
-  togglePlay,
-  prevSong,
-  nextSong,
   togglePlayMode,
   setVolume,
   updateProgress,
 } = useMusicStore();
 
+// 手动实现控制方法
+const togglePlay = () => {
+  if (!sound.value) return;
+  if (isPlaying.value) {
+    sound.value.pause();
+  } else {
+    sound.value.play().catch((err) => {
+      console.error("播放失败:", err);
+      isPlaying.value = false;
+    });
+  }
+};
+
+const prevSong = () => {
+  if (songs.value.length === 0) return;
+  let newIndex = currentSongIndex.value - 1;
+  if (newIndex < 0) newIndex = songs.value.length - 1;
+  currentSongIndex.value = newIndex;
+};
+
+const nextSong = () => {
+  if (songs.value.length === 0) return;
+  let newIndex;
+  if (playMode.value === "shuffle") {
+    do {
+      newIndex = Math.floor(Math.random() * songs.value.length);
+    } while (newIndex === currentSongIndex.value && songs.value.length > 1);
+  } else {
+    newIndex = (currentSongIndex.value + 1) % songs.value.length;
+  }
+  currentSongIndex.value = newIndex;
+};
+
 // 当前播放歌曲
 const currentSong = computed(() => {
+  console.log("🍀🍀🍀🍀", "currentSong", songs.value[currentSongIndex.value]);
+
   return currentSongIndex.value >= 0 && songs.value.length > currentSongIndex.value
     ? songs.value[currentSongIndex.value]
     : {};
@@ -213,23 +244,21 @@ const playSelectedSong = (index) => {
   // 创建新的howler实例
   sound.value = new Howl({
     src: [`file://${song.filePath}`],
-    format: ["mp3"], // 明确指定格式
+    format: ["mp3"],
     onload: () => {
       console.log("歌曲加载成功，开始播放");
       sound.value.play();
       isPlaying.value = true;
       duration.value = sound.value.duration();
+      updateProgressInterval();
     },
     onplay: () => {
       console.log("播放开始");
       isPlaying.value = true;
-      // 定期更新进度
-      updateProgressInterval();
     },
     onpause: () => {
       console.log("播放暂停");
       isPlaying.value = false;
-      clearInterval(progressInterval.value);
     },
     onend: () => {
       console.log("歌曲播放结束，当前模式:", playMode.value);
@@ -250,7 +279,7 @@ const playSelectedSong = (index) => {
 const updateProgressInterval = () => {
   clearInterval(progressInterval.value);
   progressInterval.value = setInterval(() => {
-    if (sound.value && !sound.value.paused()) {
+    if (sound.value && !sound.value.paused) {
       updateProgress(sound.value.seek());
     }
   }, 1000);
@@ -265,7 +294,10 @@ const toggleMute = () => {
 
 // 初始化
 onMounted(() => {
-  // 不需要初始化音频元素，howler会处理
+  // 设置初始音量
+  if (sound.value) {
+    sound.value.volume(volume.value / 100);
+  }
 });
 
 // 监听当前歌曲变化
@@ -281,12 +313,12 @@ const stopCurrentSongWatch = watchEffect(() => {
 // 监听播放状态变化
 const stopPlayStatusWatch = watchEffect(() => {
   if (sound.value) {
-    if (isPlaying.value) {
+    if (isPlaying.value && sound.value.paused) {
       sound.value.play().catch((err) => {
         console.error("播放失败:", err);
         isPlaying.value = false;
       });
-    } else {
+    } else if (!isPlaying.value && !sound.value.paused) {
       sound.value.pause();
     }
   }
