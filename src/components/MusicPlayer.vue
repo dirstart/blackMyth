@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watchEffect, onUnmounted } from "vue";
+import { computed, ref, onMounted, watchEffect, onUnmounted, watch } from "vue";
 import { useMusicStore } from "@/composables/useMusicStore";
 import albumCover from "@/icons/album.png";
 import { Howl } from "howler";
@@ -128,8 +128,15 @@ const {
   togglePlayMode,
   setVolume,
   updateProgress,
-  togglePlay: storeTogglePlay, // 重命名store的togglePlay方法
+  togglePlay: storeTogglePlay,
+  nextSong: storeNextSong, // 导入 store 的 nextSong
+  prevSong: storePrevSong, // 导入 store 的 prevSong
 } = useMusicStore();
+
+// 移除组件内的 nextSong 和 prevSong 实现
+// 改为直接使用 store 的方法
+const nextSong = () => storeNextSong();
+const prevSong = () => storePrevSong();
 
 // 手动实现控制方法
 const togglePlay = () => {
@@ -145,26 +152,6 @@ const togglePlay = () => {
   } else {
     sound.value.pause();
   }
-};
-
-const prevSong = () => {
-  if (songs.value.length === 0) return;
-  let newIndex = currentSongIndex.value - 1;
-  if (newIndex < 0) newIndex = songs.value.length - 1;
-  currentSongIndex.value = newIndex;
-};
-
-const nextSong = () => {
-  if (songs.value.length === 0) return;
-  let newIndex;
-  if (playMode.value === "shuffle") {
-    do {
-      newIndex = Math.floor(Math.random() * songs.value.length);
-    } while (newIndex === currentSongIndex.value && songs.value.length > 1);
-  } else {
-    newIndex = (currentSongIndex.value + 1) % songs.value.length;
-  }
-  currentSongIndex.value = newIndex;
 };
 
 // 当前播放歌曲
@@ -209,6 +196,67 @@ const handleProgressClick = (e) => {
   updateProgress(newTime);
 };
 
+// 修改playSelectedSong为异步函数
+const playSelectedSong = async (index) => {
+  try {
+    if (index < 0 || index >= songs.value.length) {
+      console.error("无效的歌曲索引:", index);
+      return;
+    }
+
+    const song = songs.value[index];
+    if (!song?.filePath) {
+      console.error("歌曲路径不存在:", song);
+      alert("无法播放：歌曲路径无效");
+      return;
+    }
+
+    isPlaying.value = true;
+    updateProgress(0);
+
+    if (sound.value) {
+      sound.value.stop();
+      clearInterval(progressInterval.value);
+      sound.value = null;
+    }
+
+    // 创建新的howler实例
+    sound.value = new Howl({
+      src: [`file://${song.filePath}`],
+      format: ["mp3"],
+      onload: () => {
+        try {
+          sound.value.play();
+          duration.value = sound.value.duration();
+          updateProgressInterval();
+        } catch (e) {
+          console.error("播放失败:", e);
+          isPlaying.value = false;
+          alert(`播放失败: ${e.message}`);
+        }
+      },
+      onplay: () => {
+        isPlaying.value = true;
+      },
+      onpause: () => {
+        isPlaying.value = false;
+      },
+      onend: () => {
+        clearInterval(progressInterval.value);
+        handleSongEnded();
+      },
+      onerror: (err) => {
+        console.error("音频播放错误:", err);
+        isPlaying.value = false;
+        alert(`播放失败: ${err}`);
+      },
+    });
+  } catch (e) {
+    console.error("播放歌曲时发生错误:", e);
+    isPlayingSong = false;
+  }
+};
+
 // 处理歌曲播放结束
 const handleSongEnded = () => {
   if (!sound.value) return;
@@ -221,62 +269,6 @@ const handleSongEnded = () => {
     // 顺序播放/随机播放
     nextSong();
   }
-};
-
-// 播放歌曲方法
-const playSelectedSong = (index) => {
-  if (index < 0 || index >= songs.value.length) {
-    console.error("无效的歌曲索引:", index);
-    return;
-  }
-
-  const song = songs.value[index];
-  if (!song?.filePath) {
-    console.error("歌曲路径不存在:", song);
-    alert("无法播放：歌曲路径无效");
-    return;
-  }
-
-  console.log("尝试播放歌曲:", song.filePath);
-
-  // 停止当前播放的声音
-  if (sound.value) {
-    sound.value.stop();
-    clearInterval(progressInterval.value);
-  }
-
-  // 创建新的howler实例
-  sound.value = new Howl({
-    src: [`file://${song.filePath}`],
-    format: ["mp3"],
-    onload: () => {
-      console.log("歌曲加载成功，开始播放");
-      sound.value.play();
-      isPlaying.value = true;
-      duration.value = sound.value.duration();
-      updateProgressInterval();
-    },
-    onplay: () => {
-      console.log("播放开始");
-      isPlaying.value = true;
-    },
-    onpause: () => {
-      console.log("播放暂停");
-      isPlaying.value = false;
-    },
-    onend: () => {
-      console.log("歌曲播放结束，当前模式:", playMode.value);
-      clearInterval(progressInterval.value);
-      handleSongEnded();
-    },
-    onerror: (err) => {
-      console.error("音频播放错误:", err);
-      isPlaying.value = false;
-      alert(`播放失败: ${err}`);
-    },
-  });
-
-  currentSongIndex.value = index;
 };
 
 // 进度更新间隔
@@ -304,27 +296,32 @@ onMounted(() => {
   }
 });
 
-// 监听当前歌曲变化
-const stopCurrentSongWatch = watchEffect(() => {
-  if (currentSongIndex.value >= 0 && songs.value.length > 0) {
-    const song = songs.value[currentSongIndex.value];
-    if (song?.filePath) {
-      playSelectedSong(currentSongIndex.value);
-    }
-  }
-});
+// 新增：使用watch监听具体依赖，并添加守卫条件
+let isPlayingSong = false;
 
-// 监听播放状态变化
-// 移除播放状态监听
-// const stopPlayStatusWatch = watchEffect(() => {
-//   if (sound.value) {
-//     if (isPlaying.value && sound.value.paused) {
-//       sound.value.play();
-//     } else if (!isPlaying.value && !sound.value.paused) {
-//       sound.value.pause();
-//     }
-//   }
-// });
+const stopCurrentSongWatch = watch(
+  [currentSongIndex, songs],
+  ([newIndex, newSongs]) => {
+    // 防止递归调用
+    if (isPlayingSong) return;
+
+    if (newIndex >= 0 && newSongs.length > 0) {
+      const song = newSongs[newIndex];
+      if (song?.filePath) {
+        // 检查是否真的需要播放新歌曲
+        const needPlay = !sound.value || sound.value.src !== `file://${song.filePath}`;
+        if (needPlay) {
+          console.log("检测到歌曲变化，准备播放新歌曲");
+          isPlayingSong = true;
+          playSelectedSong(newIndex).finally(() => {
+            isPlayingSong = false;
+          });
+        }
+      }
+    }
+  },
+  { immediate: true } // 初始化时执行一次
+);
 
 // 监听音量变化
 const stopVolumeWatch = watchEffect(() => {
@@ -336,7 +333,6 @@ const stopVolumeWatch = watchEffect(() => {
 // 清理监听器
 onUnmounted(() => {
   stopCurrentSongWatch();
-  // stopPlayStatusWatch();
   stopVolumeWatch();
   if (sound.value) {
     sound.value.stop();
