@@ -129,77 +129,83 @@ onUnmounted(() => {
 .button-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-
-  .control-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #2d2d2d;
-    border: 1px solid #404040;
-    border-radius: 6px;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-
-    &:hover {
-      background: #3d3d3d;
-      border-color: #505050;
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      background: #252525;
-      transform: translateY(0);
-    }
-
-    .shortcut {
-      display: inline-flex;
+  justify-content: center;
+    /* 实现居中显示 */
+    gap: 12px;
+    padding: 12px 20px;
+    /* 移除背景色 */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  
+    .control-button {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      min-width: 20px;
-      height: 18px;
-      background: #404040;
-      border-radius: 3px;
-      font-size: 11px;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(145deg, #222, #383737);
+      /* 黑白渐变背景 */
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 14px;
       font-weight: 500;
-      color: #cccccc;
-      line-height: 1;
-    }
-
-    .label {
-      color: #e0e0e0;
-      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+  
+      &:hover {
+        background: linear-gradient(145deg, #333, #9c9b98);
+        border-color: #444;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+  
+      &:active {
+        background: #111;
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+  
+      .shortcut {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 22px;
+        background: #333;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+  
+      .label {
+        color: #e0e0e0;
+        font-size: 13px;
+      }
     }
   }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .button-bar {
-    gap: 4px;
-    padding: 6px 12px;
-
-    .control-button {
-      padding: 4px 8px;
-      font-size: 11px;
-
-      .shortcut {
-        min-width: 16px;
-        height: 16px;
-        font-size: 10px;
+  
+  // 响应式设计
+  @media (max-width: 768px) {
+    .button-bar {
+      gap: 8px;
+      padding: 10px 16px;
+  
+      .control-button {
+        padding: 6px 12px;
+        font-size: 12px;
+  
+        .shortcut {
+          min-width: 20px;
+          height: 18px;
+          font-size: 11px;
       }
 
       .label {
-        font-size: 11px;
+        font-size: 12px;
       }
     }
   }
