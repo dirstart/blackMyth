@@ -4,57 +4,53 @@
     <ul class="list">
       <li
         class="list-item"
-        v-for="(item, index) in items"
+        v-for="(song, index) in songs"
         :key="index"
+        :class="{ active: currentSongIndex === index }"
+        @click="playSong(index)"
       >
-        {{ item }}
+        {{ song.title }}
       </li>
     </ul>
     <button
       class="load-local-btn"
       @click="loadLocalMusic"
-    >
-      读取本地音乐
-    </button>
+    >读取本地音乐</button>
   </div>
 </template>
 
 <script setup>
-import { useElectron } from '@/composables/useElectron'
-const { openMusicFileDialog } = useElectron();
+import { useElectron } from "@/composables/useElectron";
+import { useMusicStore } from "@/composables/useMusicStore";
+const { openMusicFileDialog, parseAudioMetadata } = useElectron();
+const { songs, currentSongIndex, playSong, addSongs } = useMusicStore();
 
-const items = [
-  "云宫讯音",
-  "英雄气概穿时休",
-  "胜景赛婆娑",
-  "别有世间曾未见",
-  "大闹黑风山",
-  "灵山黄远求",
-  "木生炉烟",
-  "后院大狗",
-  "怪不得小生现出本相",
-  "胖长二百七十岁",
-  "正是山中黑风王"
-];
-
-// 读取本地音乐文件
+// 读取本地音乐文件并解析元数据
 const loadLocalMusic = async () => {
   const files = await openMusicFileDialog({
-    title: '选择本地音乐文件',
-    filters: [{
-      name: '音频文件',
-      extensions: ['mp3', 'wav', 'flac', 'm4a']
-    }],
-    properties: ['openFile', 'multiSelections']
-  })
+    title: "选择本地音乐文件",
+    filters: [
+      {
+        name: "音频文件",
+        extensions: ["mp3", "wav", "flac", "m4a", "ogg", "aac", "wma"],
+      },
+    ],
+    properties: ["openFile", "multiSelections"],
+  });
 
   if (files && files.length > 0) {
-    // 这里可以添加处理选中文件的逻辑
-    console.log('选中的音乐文件:', files)
-    // 例如: 将文件添加到播放列表
-    // items.push(...files.map(file => file.name))
+    // 解析每个文件的元数据
+    const newSongs = [];
+    for (const filePath of files) {
+      const songInfo = await parseAudioMetadata(filePath);
+      if (songInfo) {
+        newSongs.push(songInfo);
+      }
+    }
+    // 添加到音乐库
+    addSongs(newSongs);
   }
-}
+};
 </script>
 
 <style scoped lang="less">
@@ -75,21 +71,26 @@ const loadLocalMusic = async () => {
 .list {
   list-style-type: none;
   padding: 0;
-}
-
-.list-item {
-  font-size: 16px;
-  line-height: 2;
-  border-bottom: 1px solid #444;
-  padding: 5px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.list-item:hover {
-  background-color: #333;
-}
-// 读取本地音乐按钮样式
+  overflow-y: auto;
+    max-height: calc(100vh - 150px);
+  
+    .list-item {
+      font-size: 16px;
+      line-height: 2;
+      border-bottom: 1px solid #444;
+      padding: 5px 0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .list-item:hover {
+      background-color: #333;
+    }
+                                .list-item.active {
+                                  background-color: #555;
+                                  font-weight: bold;
+                                }
+                                }
 .load-local-btn {
   width: 100%;
   padding: 8px 0;
@@ -100,9 +101,9 @@ const loadLocalMusic = async () => {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
 
-  &:hover {
-    background-color: #555;
-  }
+.load-local-btn:hover {
+  background-color: #555;
 }
 </style>

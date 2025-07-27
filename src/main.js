@@ -1,6 +1,7 @@
 import path from "node:path";
 import { app, ipcMain, BrowserWindow, dialog } from "electron";
 import started from "electron-squirrel-startup";
+const mm = require('music-metadata');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -126,3 +127,41 @@ function setupWindowListeners(win) {
     return win.webContents.send('window-focus-change', false);
   });
 };
+
+// 添加音频元数据解析服务
+ipcMain.handle('parse-audio-metadata', async (event, filePath) => {
+  try {
+    const metadata = await mm.parseFile(filePath, {
+      duration: true,
+      skipCovers: false // 不跳过封面图片
+    });
+
+    // 提取专辑封面（转换为Base64）
+    let albumCover = null;
+    if (metadata.common.picture && metadata.common.picture.length > 0) {
+      const picture = metadata.common.picture[0];
+      albumCover = `data:${picture.format};base64,${picture.data.toString('base64')}`;
+    }
+
+    // 格式化时长（秒 -> 分:秒）
+    const duration = metadata.format.duration ? Math.floor(metadata.format.duration) : 0;
+    const minutes = Math.floor(duration / 60);
+    const seconds = String(duration % 60).padStart(2, '0');
+    const formattedDuration = `${minutes}:${seconds}`;
+
+    return {
+      fileName: path.basename(filePath),
+      title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
+      artist: metadata.common.artist || '未知艺术家',
+      album: metadata.common.album || '未知专辑',
+      format: metadata.format.container?.toUpperCase() || path.extname(filePath).slice(1).toUpperCase(),
+      duration: formattedDuration,
+      durationSeconds: duration,
+      albumCover: albumCover,
+      filePath: filePath
+    };
+  } catch (error) {
+    console.error('解析音频元数据失败:', error);
+    return null;
+  }
+});

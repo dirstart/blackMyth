@@ -5,7 +5,6 @@ export function useElectron() {
   const isMaximized = ref(false);
   const isWindowFocused = ref(true);
   const api = ref(null);
-  const isReady = ref(false); // 添加加载状态
 
   const init = () => {
     if (typeof window !== 'undefined' && window.electronAPI) {
@@ -28,7 +27,6 @@ export function useElectron() {
       api.value.isFocused().then((focused) => {
         isWindowFocused.value = focused;
       });
-      isReady.value = true; // 初始化完成后设置为 true
     }
   };
 
@@ -42,11 +40,6 @@ export function useElectron() {
 
   // 添加批量读取本地音乐文件的API
   const openMusicFileDialog = async (options = {}) => {
-    if (!isReady.value) {
-      console.warn('Electron API 尚未初始化完成');
-      return [];
-    }
-
     if (!api.value || !api.value.openFileDialog) {
       console.warn('Electron API not available or openFileDialog not implemented');
       return [];
@@ -81,6 +74,21 @@ export function useElectron() {
     }
   };
 
+  // 添加解析音频元数据的API
+  const parseAudioMetadata = async (filePath) => {
+    if (!api.value || !api.value.parseAudioMetadata) {
+      console.warn('parseAudioMetadata API not available');
+      return null;
+    }
+
+    try {
+      return await api.value.parseAudioMetadata(filePath);
+    } catch (error) {
+      console.error('解析音频元数据失败:', error);
+      return null;
+    }
+  };
+
   onMounted(init);
   onUnmounted(cleanup);
 
@@ -92,6 +100,6 @@ export function useElectron() {
     toggleMaximize,
     close,
     openMusicFileDialog,
-    isReady // 导出加载状态
+    parseAudioMetadata
   };
 }

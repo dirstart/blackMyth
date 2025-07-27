@@ -8,18 +8,11 @@
 
       <!-- 音乐内容 -->
       <div class="content flex-1 flex-col">
-        <!-- 专辑/封面 -->
-        <div class="player-content flex-1">
-          <div>专辑</div>
-        </div>
         <!-- 音乐播放器 -->
-        <div class="player basis-150">
-          <div>黑神话悟空：主题音乐</div>
-          <div>播放进度条可拖动</div>
-          <div>播放控制：随机播放</div>
-        </div>
+        <MusicPlayer class="basis-150" />
+        <!-- 快捷按键 -->
         <div class="shortcuts basis-100">
-          快件按钮组件
+          快捷按钮组件
           <ShortCut />
         </div>
       </div>
@@ -31,14 +24,28 @@
 </template>
 
 <script setup>
+import { provide } from 'vue';
+import { createMusicStore } from '@/composables/useMusicStore';
 import InkBg from '@/components/InkBg.vue';
 import MacTitleBar from '@/components/MacTitleBar.vue';
 import LeftList from '@/components/LeftList.vue';
 import ShortCut from '@/components/ShortCut.vue';
+import MusicPlayer from '@/components/MusicPlayer.vue'; // 新增导入
+
+// 创建并提供音乐数据存储
+const musicStore = createMusicStore();
+provide('musicStore', musicStore);
 </script>
 
 <style lang="less">
 .content {
+  background-color: rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  
+  .player-content {
+    padding: 20px;
 }
 </style>
 

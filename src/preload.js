@@ -22,7 +22,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('window-maximize-change', (_, isMaximized) =>
       callback(isMaximized)
     );
-  }
+  },
+  parseAudioMetadata: (filePath) => ipcRenderer.invoke('parse-audio-metadata', filePath)
 });
 
 // sss todo debug
