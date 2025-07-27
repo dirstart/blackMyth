@@ -10,6 +10,11 @@ export const createMusicStore = () => {
   const isPlaying = ref(false);
   // 上次选择的文件夹路径
   const lastMusicFolder = ref('');
+  // 新增播放相关状态
+  const playMode = ref('order'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
+  const volume = ref(80); // 音量 0-100
+  const currentTime = ref(0); // 当前播放时间(秒)
+  const duration = ref(0); // 歌曲总时长(秒)
 
   // 从本地存储加载上次选择的文件夹
   const loadLastFolder = () => {
@@ -64,14 +69,69 @@ export const createMusicStore = () => {
     isPlaying.value = !isPlaying.value;
   };
 
+  // 新增播放控制方法
+  // 上一首
+  const prevSong = () => {
+    if (songs.value.length === 0) return;
+    currentSongIndex.value = (
+      currentSongIndex.value - 1 + songs.value.length
+    ) % songs.value.length;
+    isPlaying.value = true;
+    // 实际播放逻辑需配合音频元素实现
+  };
+
+  // 下一首
+  const nextSong = () => {
+    if (songs.value.length === 0) return;
+    if (playMode.value === 'shuffle') {
+      // 随机播放逻辑
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * songs.value.length);
+      } while (randomIndex === currentSongIndex.value && songs.value.length > 1);
+      currentSongIndex.value = randomIndex;
+    } else {
+      // 顺序播放逻辑
+      currentSongIndex.value = (currentSongIndex.value + 1) % songs.value.length;
+    }
+    isPlaying.value = true;
+    // 实际播放逻辑需配合音频元素实现
+  };
+
+  // 切换播放模式
+  const togglePlayMode = () => {
+    const modes = ['order', 'repeat', 'shuffle'];
+    const currentModeIndex = modes.indexOf(playMode.value);
+    playMode.value = modes[(currentModeIndex + 1) % modes.length];
+  };
+
+  // 设置音量
+  const setVolume = (newVolume) => {
+    volume.value = Math.max(0, Math.min(100, newVolume));
+  };
+
+  // 更新播放进度
+  const updateProgress = (time) => {
+    currentTime.value = time;
+  };
+
   return {
     songs,
     currentSongIndex,
     isPlaying,
     lastMusicFolder,
+    playMode,
+    volume,
+    currentTime,
+    duration,
     addSongs,
     playSong,
     togglePlay,
+    prevSong,
+    nextSong,
+    togglePlayMode,
+    setVolume,
+    updateProgress,
     saveLastFolder
   };
 };

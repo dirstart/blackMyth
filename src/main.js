@@ -15,11 +15,16 @@ const createWindow = () => {
     height: 800,       // 初始高度
     minWidth: 1057,    // 最小宽度
     minHeight: 752,    // 最小高度
+    nodeIntegration: true, // 允许渲染进程使用Node.js API
+    contextIsolation: false, // 禁用上下文隔离
     frame: false, // 完全隐藏原生标题栏
     transparent: true, // 标题栏允许透明
     alwaysOnTop: false, // 避免强制置顶
     vibrancy: 'under-window', // macOS 毛玻璃效果（可选）
     backgroundColor: '#000', // 设置窗口背景色与标题栏一致
+    // 添加以下配置
+    allowFileAccess: true,
+    webSecurity: false, // 仅在开发阶段使用，生产环境建议关闭
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 		},
@@ -154,7 +159,7 @@ ipcMain.handle('parse-audio-metadata', async (event, filePath) => {
       title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
       artist: metadata.common.artist || '未知艺术家',
       album: metadata.common.album || '未知专辑',
-      format: metadata.format.container?.toUpperCase() || path.extname(filePath).slice(1).toUpperCase(),
+      format: path.extname(filePath).slice(1).toUpperCase() || metadata.format.container?.toUpperCase(),
       duration: formattedDuration,
       durationSeconds: duration,
       albumCover: albumCover,
