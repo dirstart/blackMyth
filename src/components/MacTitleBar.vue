@@ -4,34 +4,20 @@
     class="mac-title-bar"
     :class="{
       'is-maximized': isMaximized,
-      'is-blur': !isWindowFocused
+      'is-blur': !isWindowFocused,
     }"
   >
     <!-- 左侧控制按钮 -->
     <div class="window-controls">
-      <button
-        class="close z-9999"
-        @click="close"
-      ></button>
-      <button
-        class="minimize z-9999"
-        @click="minimize"
-      ></button>
-      <button
-        class="maximize z-9999"
-        @click="toggleMaximize"
-      ></button>
+      <button class="close z-9999" @click="close"></button>
+      <button class="minimize z-9999" @click="minimize"></button>
+      <button class="maximize z-9999" @click="toggleMaximize"></button>
     </div>
-
-    <!-- 居中标题 -->
-    <!-- <div class="title">
-      <slot>Electron App</slot>
-    </div> -->
   </div>
 </template>
 
 <script setup>
-import { useElectron } from '@/composables/useElectron';
+import { useElectron } from "@/composables/useElectron";
 
 const {
   isElectron,
@@ -39,7 +25,7 @@ const {
   isWindowFocused,
   minimize,
   toggleMaximize,
-  close
+  close,
 } = useElectron();
 </script>
 
@@ -47,19 +33,16 @@ const {
 .mac-title-bar {
   /* 允许拖动 */
   -webkit-app-region: drag;
-    height: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   padding: 0 12px;
-  /* background-color: rgba(255, 255, 255, 0.7); */
-    /* sss todo */
-    /* background: #089e8a; */
-      backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   position: relative;
   z-index: 1000;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* 深色模式适配 */

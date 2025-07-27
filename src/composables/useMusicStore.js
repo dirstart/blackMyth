@@ -11,7 +11,7 @@ export const createMusicStore = () => {
   // 上次选择的文件夹路径
   const lastMusicFolder = ref('');
   // 新增播放相关状态
-  const playMode = ref('order'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
+  const playMode = ref('shuffle'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
   const volume = ref(80); // 音量 0-100
   const currentTime = ref(0); // 当前播放时间(秒)
   const duration = ref(0); // 歌曲总时长(秒)
@@ -59,17 +59,19 @@ export const createMusicStore = () => {
   };
 
   // 播放指定歌曲
+  // 移除具体播放逻辑，只保留状态和基础方法
   const playSong = (index) => {
     currentSongIndex.value = index;
     isPlaying.value = true;
   };
 
   // 切换播放/暂停
+  // 检查togglePlay方法是否类似以下实现
   const togglePlay = () => {
     isPlaying.value = !isPlaying.value;
+    // 确保这里有正确的播放/暂停逻辑
   };
 
-  // 新增播放控制方法
   // 上一首
   const prevSong = () => {
     if (songs.value.length === 0) return;
@@ -77,30 +79,26 @@ export const createMusicStore = () => {
       currentSongIndex.value - 1 + songs.value.length
     ) % songs.value.length;
     isPlaying.value = true;
-    // 实际播放逻辑需配合音频元素实现
   };
 
   // 下一首
   const nextSong = () => {
     if (songs.value.length === 0) return;
     if (playMode.value === 'shuffle') {
-      // 随机播放逻辑
       let randomIndex;
       do {
         randomIndex = Math.floor(Math.random() * songs.value.length);
       } while (randomIndex === currentSongIndex.value && songs.value.length > 1);
       currentSongIndex.value = randomIndex;
     } else {
-      // 顺序播放逻辑
       currentSongIndex.value = (currentSongIndex.value + 1) % songs.value.length;
     }
     isPlaying.value = true;
-    // 实际播放逻辑需配合音频元素实现
   };
 
   // 切换播放模式
   const togglePlayMode = () => {
-    const modes = ['order', 'repeat', 'shuffle'];
+    const modes = ['repeat', 'shuffle'];
     const currentModeIndex = modes.indexOf(playMode.value);
     playMode.value = modes[(currentModeIndex + 1) % modes.length];
   };
