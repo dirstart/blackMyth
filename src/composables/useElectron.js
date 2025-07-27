@@ -89,6 +89,46 @@ export function useElectron() {
     }
   };
 
+  // 添加选择音乐文件夹的API
+  const openMusicFolderDialog = async (options = {}) => {
+    if (!api.value || !api.value.openFileDialog) {
+      console.warn('Electron API not available or openFileDialog not implemented');
+      return null;
+    }
+
+    // 默认配置
+    const defaultOptions = {
+      title: '选择音乐文件夹',
+      properties: ['openDirectory'] // 选择目录
+    };
+
+    // 合并用户选项与默认选项
+    const dialogOptions = { ...defaultOptions, ...options };
+
+    try {
+      const result = await api.value.openFileDialog(dialogOptions);
+      return result && result.length > 0 ? result[0] : null;
+    } catch (error) {
+      console.error('打开文件夹对话框失败:', error);
+      return null;
+    }
+  };
+
+  // 添加读取文件夹内音乐文件的API
+  const readMusicFolder = async (folderPath) => {
+    if (!api.value || !api.value.readMusicFolder) {
+      console.warn('readMusicFolder API not available');
+      return [];
+    }
+
+    try {
+      return await api.value.readMusicFolder(folderPath);
+    } catch (error) {
+      console.error('读取音乐文件夹失败:', error);
+      return [];
+    }
+  };
+
   onMounted(init);
   onUnmounted(cleanup);
 
@@ -100,6 +140,8 @@ export function useElectron() {
     toggleMaximize,
     close,
     openMusicFileDialog,
-    parseAudioMetadata
+    parseAudioMetadata,
+    openMusicFolderDialog,
+    readMusicFolder
   };
 }

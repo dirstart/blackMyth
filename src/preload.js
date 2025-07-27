@@ -23,7 +23,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
       callback(isMaximized)
     );
   },
-  parseAudioMetadata: (filePath) => ipcRenderer.invoke('parse-audio-metadata', filePath)
+  parseAudioMetadata: (filePath) => ipcRenderer.invoke('parse-audio-metadata', filePath),
+  // 在 electronAPI 对象中添加
+  readMusicFolder: (folderPath) => ipcRenderer.invoke('read-music-folder', folderPath)
 });
 
 // sss todo debug

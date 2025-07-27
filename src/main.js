@@ -165,3 +165,24 @@ ipcMain.handle('parse-audio-metadata', async (event, filePath) => {
     return null;
   }
 });
+
+// 在现有的 ipcMain 处理函数后添加
+ipcMain.handle('read-music-folder', async (event, folderPath) => {
+  try {
+    // 实现读取文件夹中音乐文件的逻辑
+    // 可使用 fs 模块遍历文件夹，筛选音频文件
+    const fs = require('fs');
+    const path = require('path');
+
+    const files = fs.readdirSync(folderPath);
+    const musicFiles = files.filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.mp3', '.wav', '.flac', '.m4a'].includes(ext);
+    }).map(file => path.join(folderPath, file));
+
+    return musicFiles;
+  } catch (error) {
+    console.error('读取音乐文件夹失败:', error);
+    return [];
+  }
+});
