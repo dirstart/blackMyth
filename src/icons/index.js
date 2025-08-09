@@ -14,14 +14,14 @@ export { Heart, Play, Pause, Previous, Next, Repeat, Shuffle, Lyrics, Volume, Mu
 
 // 默认导出所有图标
 export default {
-	Heart,
-	Play,
-	Pause,
-	Previous,
-	Next,
-	Repeat,
-	Shuffle,
-	Lyrics,
-	Volume,
-	Music,
+  Heart,
+  Play,
+  Pause,
+  Previous,
+  Next,
+  Repeat,
+  Shuffle,
+  Lyrics,
+  Volume,
+  Music,
 };

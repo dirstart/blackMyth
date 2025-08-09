@@ -26,8 +26,7 @@
 </template>
 
 <script setup>
-import { ref, provide } from "vue";
-import { createMusicStore } from "@/composables/useMusicStore";
+import { ref } from "vue";
 import InkBg from "@/components/InkBg.vue";
 import MacTitleBar from "@/components/MacTitleBar.vue";
 import LeftList from "@/components/LeftList.vue";
@@ -36,9 +35,6 @@ import MusicPlayer from "@/components/MusicPlayer.vue"; // 新增导入
 
 // 声明musicPlayer ref
 const musicPlayer = ref(null);
-// 创建并提供音乐数据存储
-const musicStore = createMusicStore();
-provide("musicStore", musicStore);
 </script>
 
 <style lang="less">

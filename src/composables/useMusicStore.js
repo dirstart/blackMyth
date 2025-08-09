@@ -10,7 +10,7 @@ export const createMusicStore = () => {
   const isPlaying = ref(false);
   // 上次选择的文件夹路径
   const lastMusicFolder = ref('');
-  // 新增播放相关状态
+  // 播放相关状态
   const playMode = ref('shuffle'); // 播放模式: order(顺序), repeat(单曲循环), shuffle(随机)
   const volume = ref(80); // 音量 0-100
   const currentTime = ref(0); // 当前播放时间(秒)
@@ -41,7 +41,7 @@ export const createMusicStore = () => {
   // 初始化时加载
   loadLastFolder();
 
-  // 修改 addSongs 方法
+  // 添加歌曲
   const addSongs = (newSongs) => {
     // 使用文件路径作为唯一标识进行去重
     const existingPaths = new Set(songs.value.map(song => song.path));
@@ -58,18 +58,19 @@ export const createMusicStore = () => {
     }
   };
 
-  // 播放指定歌曲
-  // 移除具体播放逻辑，只保留状态和基础方法
-  const playSong = (index) => {
+  // 设置当前播放歌曲索引
+  const setCurrentSongIndex = (index) => {
     currentSongIndex.value = index;
-    isPlaying.value = true;
   };
 
-  // 切换播放/暂停
-  // 检查togglePlay方法是否类似以下实现
+  // 设置播放状态
+  const setPlayingState = (playing) => {
+    isPlaying.value = playing;
+  };
+
+  // 切换播放/暂停状态
   const togglePlay = () => {
     isPlaying.value = !isPlaying.value;
-    // 确保这里有正确的播放/暂停逻辑
   };
 
   // 上一首
@@ -113,7 +114,22 @@ export const createMusicStore = () => {
     currentTime.value = time;
   };
 
+  // 设置歌曲总时长
+  const setDuration = (newDuration) => {
+    duration.value = newDuration;
+  };
+
+  // 清空播放列表
+  const clearSongs = () => {
+    songs.value = [];
+    currentSongIndex.value = -1;
+    isPlaying.value = false;
+    currentTime.value = 0;
+    duration.value = 0;
+  };
+
   return {
+    // 状态
     songs,
     currentSongIndex,
     isPlaying,
@@ -122,22 +138,27 @@ export const createMusicStore = () => {
     volume,
     currentTime,
     duration,
+
+    // 方法
     addSongs,
-    playSong,
+    setCurrentSongIndex,
+    setPlayingState,
     togglePlay,
     prevSong,
     nextSong,
     togglePlayMode,
     setVolume,
     updateProgress,
-    saveLastFolder
+    setDuration,
+    saveLastFolder,
+    clearSongs
   };
 };
 
 // 提供音乐存储
-export const provideMusicStore = () => {
+export const provideMusicStore = (app) => {
   const musicStore = createMusicStore();
-  provide('musicStore', musicStore);
+  app.provide('musicStore', musicStore);
   return musicStore;
 };
 

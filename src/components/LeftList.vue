@@ -13,8 +13,14 @@
       </li>
     </ul>
     <div class="button-group">
-      <button class="load-local-btn" @click="loadLocalMusic">读取本地音乐</button>
-      <button class="select-folder-btn" @click="selectMusicFolder">选择音乐文件夹</button>
+      <button
+        class="load-local-btn"
+        @click="loadLocalMusic"
+      >读取本地音乐</button>
+      <button
+        class="select-folder-btn"
+        @click="selectMusicFolder"
+      >选择音乐文件夹</button>
     </div>
   </div>
 </template>
@@ -33,7 +39,7 @@ const {
 const {
   songs,
   currentSongIndex,
-  playSong,
+  setCurrentSongIndex,
   addSongs,
   saveLastFolder,
   lastMusicFolder,
@@ -101,10 +107,10 @@ onMounted(() => {
   }
 });
 
-// 修改playSong调用方式，确保正确传递索引
+// 修改setCurrentSongIndex调用方式，确保正确传递索引
 // 处理歌曲点击
 const handleSongClick = (index) => {
-  playSong(index); // 只需更新状态，播放逻辑在MusicPlayer中处理
+  setCurrentSongIndex(index); // 只需更新状态，播放逻辑在MusicPlayer中处理
 };
 </script>
 
@@ -162,12 +168,10 @@ const handleSongClick = (index) => {
     left: 0;
     width: 0;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%);
     transition: width 0.6s ease-out;
     z-index: -1;
     border-radius: 2px; // 伪元素也添加圆角
